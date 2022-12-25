@@ -2,17 +2,13 @@ from __future__ import annotations
 
 import typing
 
-AfterUpdateCallable: typing.TypeAlias = typing.Callable[[typing.Self, str, any], None]
-AfterDeleteCallable: typing.TypeAlias = typing.Callable[[typing.Self, str], None]
-TraverseCallbackType: typing.TypeAlias = typing.Callable[[str, any], None]
-
 
 class ReactiveConfigNode:
     def __init__(
-            self, config: typing.Self | dict = None,
+            self, config: ReactiveConfigNode | dict = None,
             after_update: AfterUpdateCallable = None,
-            after_delete: AfterDeleteCallable = None
-    ):
+            after_delete: AfterDeleteCallable = None):
+
         self.__config = config
         if config is None:
             self.__config = {}
@@ -86,3 +82,8 @@ class ReactiveConfigNode:
                 continue
 
             value.dfs_traverse(callback)
+
+
+AfterUpdateCallable: typing.TypeAlias = typing.Callable[[ReactiveConfigNode, str, any], None]
+AfterDeleteCallable: typing.TypeAlias = typing.Callable[[ReactiveConfigNode, str], None]
+TraverseCallbackType: typing.TypeAlias = typing.Callable[[str, any], None]

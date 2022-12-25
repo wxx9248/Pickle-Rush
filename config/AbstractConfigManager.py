@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import abc
 import enum
+import json
 import typing
 
 from config.ReactiveConfigNode import ReactiveConfigNode, AfterUpdateCallable, AfterDeleteCallable
@@ -87,7 +88,8 @@ class AbstractConfigManager(abc.ABC):
             return
 
         with open(self.__file_path, "r") as f:
-            self.__config = self.__serializer.deserialize(f.read())
+            config = self.__serializer.deserialize(f.read())
+            self.__config = config
 
     def sync_to_file(self):
         if not self.__binding_mode & AbstractConfigManager.BindingMode.TO_FILE:

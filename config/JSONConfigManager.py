@@ -7,7 +7,7 @@ from config.ReactiveConfigNode import ReactiveConfigNode
 
 class Serializer(AbstractConfigManager.Serializer):
     def __init__(self, indent=4):
-        self.__indent = 4
+        self.__indent = indent
 
     @property
     def indent(self):
@@ -27,6 +27,5 @@ class JSONConfigManager(AbstractConfigManager.AbstractConfigManager):
     def __init__(
             self,
             file_path: str,
-            binding_mode=AbstractConfigManager.AbstractConfigManager.BindingMode.DOUBLE
-    ):
+            binding_mode=AbstractConfigManager.AbstractConfigManager.BindingMode.DOUBLE):
         super().__init__(Serializer(), file_path, binding_mode)
