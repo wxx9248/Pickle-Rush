@@ -9,6 +9,8 @@ class EventDispatcher:
         else:
             self.event_type_handler_dict[event_type] = [handler]
 
+    # TODO: unregister function
+
     def dispatch(self, event):
         if event.type in self.event_type_handler_dict:
             for handler in self.event_type_handler_dict[event.type]:

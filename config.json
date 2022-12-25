@@ -1,8 +1,8 @@
 {
-  "debug": true,
-  "game": {},
-  "audio": {},
-  "graphics": {},
-  "input": {},
-  "logger": {}
+    "debug": true,
+    "game": {},
+    "audio": {},
+    "graphics": {},
+    "input": {},
+    "logger": {}
 }
