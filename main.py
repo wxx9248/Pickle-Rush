@@ -21,6 +21,7 @@ def main():
 
     for thread in threads:
         thread.join()
+        logger.info(f"{thread} quit")
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ class ConfigFileEventHandler(watchdog.events.FileSystemEventHandler):
 
 
 class ConfigMonitorThread(BaseThread):
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__()
         self.__path = path
         self.__config_manager: AbstractConfigManager = JSONConfigManager(self.__path,
@@ -53,12 +53,12 @@ class ConfigMonitorThread(BaseThread):
         self.__file_observer.stop()
         self.__file_observer.join()
 
-    def on_config_file_updated(self, event: pygame.event.Event):
+    def on_config_file_updated(self, _: pygame.event.Event):
         # Update config dict correspondingly
         self.logger.info("Detected config file changes. Loading new configuration...")
         self.__config_manager.sync_from_file()
 
-    def on_config_dict_updated(self, event: pygame.event.Event):
+    def on_config_dict_updated(self, _: pygame.event.Event):
         # Update config file correspondingly
         self.logger.info("Syncing new configuration to config file...")
         self.__config_manager.sync_to_file()

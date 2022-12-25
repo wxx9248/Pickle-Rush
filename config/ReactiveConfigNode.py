@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import typing
 
+AfterUpdateCallable: typing.TypeAlias = typing.Callable[[typing.Self, str, any], None]
+AfterDeleteCallable: typing.TypeAlias = typing.Callable[[typing.Self, str], None]
+TraverseCallbackType: typing.TypeAlias = typing.Callable[[str, any], None]
+
 
 class ReactiveConfigNode:
     def __init__(
             self, config: typing.Self | dict = None,
-            after_update: typing.Callable[[typing.Self, str, any], None] = None,
-            after_delete: typing.Callable[[typing.Self, str], None] = None
+            after_update: AfterUpdateCallable = None,
+            after_delete: AfterDeleteCallable = None
     ):
         self.__config = config
         if config is None:
@@ -21,7 +25,7 @@ class ReactiveConfigNode:
         return self.__after_update
 
     @after_update.setter
-    def after_update(self, value):
+    def after_update(self, value: AfterUpdateCallable):
         self.__after_update = value
 
     @property
@@ -29,7 +33,7 @@ class ReactiveConfigNode:
         return self.__after_delete
 
     @after_delete.setter
-    def after_delete(self, value):
+    def after_delete(self, value: AfterDeleteCallable):
         self.__after_delete = value
 
     # Dictionary operations
@@ -56,10 +60,10 @@ class ReactiveConfigNode:
         if self.__after_delete is not None:
             self.__after_delete(self, key)
 
-    def __cmp__(self, other):
+    def __cmp__(self, other: ReactiveConfigNode):
         return self.__cmp__(other)
 
-    def __contains__(self, item):
+    def __contains__(self, item: any):
         return item in self.__config
 
     def __iter__(self):
@@ -74,7 +78,7 @@ class ReactiveConfigNode:
     def items(self):
         return self.__config.items()
 
-    def dfs_traverse(self, callback: typing.Callable[[str, any], None]):
+    def dfs_traverse(self, callback: TraverseCallbackType):
         for key, value in self.__config.items():
             callback(key, value)
 

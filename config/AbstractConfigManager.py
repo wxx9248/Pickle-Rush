@@ -3,7 +3,7 @@ import abc
 import enum
 import typing
 
-from config.ReactiveConfigNode import ReactiveConfigNode
+from config.ReactiveConfigNode import ReactiveConfigNode, AfterUpdateCallable, AfterDeleteCallable
 
 
 class Serializer(abc.ABC):
@@ -61,7 +61,7 @@ class AbstractConfigManager(abc.ABC):
         return self.__config.after_update
 
     @after_update.setter
-    def after_update(self, value):
+    def after_update(self, value: AfterUpdateCallable):
         def setter(_, v: any):
             if type(v) is ReactiveConfigNode:
                 v.after_update = value
@@ -74,7 +74,7 @@ class AbstractConfigManager(abc.ABC):
         return self.__config.after_delete
 
     @after_delete.setter
-    def after_delete(self, value):
+    def after_delete(self, value: AfterDeleteCallable):
         def setter(_, v: any):
             if type(v) is ReactiveConfigNode:
                 v.after_delete = value
