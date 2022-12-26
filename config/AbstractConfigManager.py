@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import abc
 import enum
-import json
 import typing
 
 from config.ReactiveConfigNode import ReactiveConfigNode, AfterUpdateCallable, AfterDeleteCallable
@@ -18,10 +17,6 @@ class Serializer(abc.ABC):
 
     @abc.abstractmethod
     def deserialize(self, config_string: str) -> ReactiveConfigNode:
-        pass
-
-    @abc.abstractmethod
-    def object_hook(self, config_node: ReactiveConfigNode | dict) -> ReactiveConfigNode:
         pass
 
 
@@ -63,7 +58,7 @@ class AbstractConfigManager(abc.ABC):
 
     @after_update.setter
     def after_update(self, value: AfterUpdateCallable):
-        def setter(_, v: any):
+        def setter(_, v: typing.Any):
             if type(v) is ReactiveConfigNode:
                 v.after_update = value
 
@@ -76,7 +71,7 @@ class AbstractConfigManager(abc.ABC):
 
     @after_delete.setter
     def after_delete(self, value: AfterDeleteCallable):
-        def setter(_, v: any):
+        def setter(_, v: typing.Any):
             if type(v) is ReactiveConfigNode:
                 v.after_delete = value
 

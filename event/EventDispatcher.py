@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
+import traceback
 import typing
 
 import pygame.event
 from readerwriterlock.rwlock import RWLockWrite
 
 from event.EventHandler import EventHandler
+
+
+def catch_exception_and_print(f: typing.Callable):
+    try:
+        f()
+    except Exception as e:
+        traceback.print_exception(e)
 
 
 class EventDispatcher:
@@ -31,7 +39,7 @@ class EventDispatcher:
             if event.type not in self.__event_handler_dict:
                 return
 
-            [handler.handle(event)
+            [catch_exception_and_print(lambda: handler.handle(event))
              for handlers in self.__event_handler_dict[event.type].values()
              for handler in handlers]
 

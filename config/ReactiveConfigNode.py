@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import typing
 
 
@@ -15,6 +16,10 @@ class ReactiveConfigNode:
 
         self.__after_update = after_update
         self.__after_delete = after_delete
+
+    @property
+    def config(self):
+        return self.__config
 
     @property
     def after_update(self):
@@ -33,7 +38,7 @@ class ReactiveConfigNode:
         self.__after_delete = value
 
     # Dictionary operations
-    def __setitem__(self, key: str, item: any):
+    def __setitem__(self, key: str, item: typing.Any):
         self.__config[key] = item
         if self.__after_update is not None:
             self.__after_update(self, key, item)
@@ -59,7 +64,7 @@ class ReactiveConfigNode:
     def __cmp__(self, other: ReactiveConfigNode):
         return self.__cmp__(other)
 
-    def __contains__(self, item: any):
+    def __contains__(self, item: typing.Any):
         return item in self.__config
 
     def __iter__(self):
@@ -84,6 +89,6 @@ class ReactiveConfigNode:
             value.dfs_traverse(callback)
 
 
-AfterUpdateCallable: typing.TypeAlias = typing.Callable[[ReactiveConfigNode, str, any], None]
+AfterUpdateCallable: typing.TypeAlias = typing.Callable[[ReactiveConfigNode, str, typing.Any], None]
 AfterDeleteCallable: typing.TypeAlias = typing.Callable[[ReactiveConfigNode, str], None]
-TraverseCallbackType: typing.TypeAlias = typing.Callable[[str, any], None]
+TraverseCallbackType: typing.TypeAlias = typing.Callable[[str, typing.Any], None]

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 
 import pygame.event
 import watchdog.events
@@ -21,9 +22,6 @@ from event.EventHandler import EventHandler
 # TODO: Use events for thread communication
 
 class WatchdogEventAdapter(watchdog.events.FileSystemEventHandler):
-    def __init__(self):
-        super().__init__()
-
     def on_modified(self, event: watchdog.events.FileSystemEvent):
         if not event.is_directory:
             pygame.event.post(pygame.event.Event(CustomEventTypes.EVENT_CONFIG_FILE_UPDATED))
@@ -67,7 +65,7 @@ class ConfigMonitorThread(BaseThread):
             self.__file_observer.start()
 
             while self.running:
-                input()
+                time.sleep(1)
 
             self.__file_observer.stop()
         except BaseException as e:
