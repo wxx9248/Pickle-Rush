@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 import pygame.display
 
-from core.BaseThread import BaseThread
+from core.SubsystemThread import SubsystemThread
 from event.EventDispatcher import EventDispatcher
 
 
-class GraphicThread(BaseThread):
-    def __init__(self, event_dispatcher: EventDispatcher):
-        super().__init__(event_dispatcher)
+class GraphicThread(SubsystemThread):
+    def __init__(self, global_event_dispatcher: EventDispatcher):
+        super().__init__(global_event_dispatcher)
 
-    def run(self):
-        try:
-            screen = pygame.display.set_mode((600, 600))
-            while self.running:
-                pygame.display.update()
-        except BaseException as e:
-            self.exception = e
-            self.stop()
+    def looper(self):
+        screen = pygame.display.set_mode((600, 600))
+        while self.running:
+            not self.event_queue.empty() and self.local_event_dispatcher.dispatch(self.event_queue.get())
+            pygame.display.update()

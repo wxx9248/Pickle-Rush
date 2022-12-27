@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
-import traceback
 import typing
 
 import pygame.event
 from readerwriterlock.rwlock import RWLockWrite
 
 from event.EventHandler import EventHandler
-
-
-def catch_exception_and_print(f: typing.Callable):
-    try:
-        f()
-    except Exception as e:
-        traceback.print_exception(e)
+from util.util import catch_exception_and_print
 
 
 class EventDispatcher:
     def __init__(self):
         self.__event_handler_dict: typing.Dict[int, typing.Dict[str, typing.Set[EventHandler]]] = {}
         self.__rwlock = RWLockWrite()
+
+    @property
+    def event_handler_dict(self):
+        return self.__event_handler_dict
 
     def register(self, event_type: int, namespace: str, handler: EventHandler):
         with self.__rwlock.gen_wlock():
@@ -30,7 +27,7 @@ class EventDispatcher:
 
             self.__event_handler_dict[event_type][namespace].add(handler)
 
-    def unregister(self, namespace: str, event_type: int, handler: EventHandler):
+    def unregister(self, event_type: int, namespace: str, handler: EventHandler):
         with self.__rwlock.gen_wlock():
             self.__event_handler_dict[event_type][namespace].remove(handler)
 

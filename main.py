@@ -6,7 +6,7 @@ import pygame
 
 from config.ConfigMonitorThread import ConfigMonitorThread
 from event.EventDispatcher import EventDispatcher
-from event.EventThread import EventThread
+from event.EventDispatchThread import EventDispatchThread
 from graphic.GraphicThread import GraphicThread
 
 
@@ -23,7 +23,7 @@ def main():
 
     # Start all subsystems
     threads = [
-        EventThread(event_dispatcher),
+        EventDispatchThread(event_dispatcher),
         ConfigMonitorThread(event_dispatcher, "config.json"),
         GraphicThread(event_dispatcher)
     ]
