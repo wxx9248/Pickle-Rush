@@ -7,6 +7,3 @@ from event.EventDispatcher import EventDispatcher
 class AudioThread(SubsystemThread):
     def __init__(self, global_event_dispatcher: EventDispatcher):
         super().__init__(global_event_dispatcher)
-
-    def run(self):
-        pass

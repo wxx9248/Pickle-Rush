@@ -4,10 +4,12 @@ import logging
 
 import pygame
 
+from audio.AudioThread import AudioThread
 from config.ConfigMonitorThread import ConfigMonitorThread
 from event.EventDispatcher import EventDispatcher
 from event.EventDispatchThread import EventDispatchThread
 from graphic.GraphicThread import GraphicThread
+from input.InputHandlingThread import InputHandlingThread
 
 
 def main():
@@ -25,7 +27,9 @@ def main():
     threads = [
         EventDispatchThread(event_dispatcher),
         ConfigMonitorThread(event_dispatcher, "config.json"),
-        GraphicThread(event_dispatcher)
+        GraphicThread(event_dispatcher),
+        AudioThread(event_dispatcher),
+        InputHandlingThread(event_dispatcher)
     ]
 
     for thread in threads:
