@@ -44,7 +44,6 @@ class ConfigMonitorThread(SubsystemThread):
 
         self.logger.debug(f"Setting up hooks for config manager")
         self.__config_manager.after_update = post_event_dict_changed
-        self.__config_manager.after_delete = post_event_dict_changed
 
         self.logger.debug(f"Setting up watchdog observer")
         self.__file_observer: watchdog.observers.Observer = watchdog.observers.Observer()

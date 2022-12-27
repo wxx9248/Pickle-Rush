@@ -12,6 +12,8 @@ class CustomEventTypes:
     """
     EVENT_CONFIG_DICT_UPDATED: int = None
     EVENT_CONFIG_FILE_UPDATED: int = None
+    EVENT_CONFIG_GET: int = None
+    EVENT_CONFIG_SET: int = None
 
 
 # Executed when first imported

@@ -7,15 +7,13 @@ import typing
 class ReactiveConfigNode:
     def __init__(
             self, config: ReactiveConfigNode | dict = None,
-            after_update: AfterUpdateCallable = None,
-            after_delete: AfterDeleteCallable = None):
+            after_update: AfterUpdateCallable = None):
 
         self.__config = config
         if config is None:
             self.__config = {}
 
         self.__after_update = after_update
-        self.__after_delete = after_delete
 
     @property
     def config(self):
@@ -28,14 +26,6 @@ class ReactiveConfigNode:
     @after_update.setter
     def after_update(self, value: AfterUpdateCallable):
         self.__after_update = value
-
-    @property
-    def after_delete(self):
-        return self.__after_delete
-
-    @after_delete.setter
-    def after_delete(self, value: AfterDeleteCallable):
-        self.__after_delete = value
 
     # Dictionary operations
     def __setitem__(self, key: str, item: typing.Any):
@@ -58,8 +48,8 @@ class ReactiveConfigNode:
 
     def __delitem__(self, key: str):
         del self.__config[key]
-        if self.__after_delete is not None:
-            self.__after_delete(self, key)
+        if self.__after_update is not None:
+            self.__after_update(self, key, None)
 
     def __cmp__(self, other: ReactiveConfigNode):
         return self.__cmp__(other)
