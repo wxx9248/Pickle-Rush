@@ -7,9 +7,15 @@ import pygame
 from audio.AudioThread import AudioThread
 from config.ConfigMonitorThread import ConfigMonitorThread
 from event.EventDispatcher import EventDispatcher
-from event.EventDispatchThread import EventDispatchThread
-from graphic.GraphicThread import GraphicThread
+from event.EventHandler import EventHandler
 from input.InputHandlingThread import InputHandlingThread
+
+running = True
+
+
+def stop(_):
+    global running
+    running = False
 
 
 def main():
@@ -22,12 +28,11 @@ def main():
 
     # Event dispatcher initialization
     event_dispatcher = EventDispatcher()
+    event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", stop))
 
     # Start all subsystems
     threads = [
-        EventDispatchThread(event_dispatcher),
         ConfigMonitorThread(event_dispatcher, "config.json"),
-        GraphicThread(event_dispatcher),
         AudioThread(event_dispatcher),
         InputHandlingThread(event_dispatcher)
     ]
@@ -35,6 +40,11 @@ def main():
     for thread in threads:
         logger.info(f"Starting {thread}")
         thread.start()
+
+    screen = pygame.display.set_mode((600, 600))
+    while running:
+        event_dispatcher.dispatch_all(pygame.event.get())
+        pygame.display.update()
 
     while len(threads):
         thread = threads.pop()
