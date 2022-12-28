@@ -2,7 +2,7 @@
 
 import pygame.event
 import watchdog.events
-import watchdog.observers
+import watchdog.observers.polling
 
 from config.AbstractConfigManager import AbstractConfigManager
 from config.JSONConfigManager import JSONConfigManager
@@ -46,7 +46,7 @@ class ConfigMonitorThread(SubsystemThread):
         self.__config_manager.after_update = post_event_dict_changed
 
         self.logger.debug(f"Setting up watchdog observer")
-        self.__file_observer: watchdog.observers.Observer = watchdog.observers.Observer()
+        self.__file_observer: watchdog.observers.Observer = watchdog.observers.polling.PollingObserver()
 
         self.logger.debug(f"Setting up event handlers")
         self.__event_handler_config_file_updated = \

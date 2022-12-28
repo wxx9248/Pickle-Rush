@@ -27,8 +27,8 @@ Please refer to https://docs.python.org/3.10/library/venv.html for documentation
       ```
     * Enable the virtual environment for this terminal session:
         * For command line shells, a developer should initialize the environment by sourcing
-          corresponding `activate` script residing in `venv/bin`. Typically:
-            * For Windows, execute `.\venv\bin\activate.ps1` in a Windows Powershell terminal;
+          corresponding `activate` script residing in `venv`. Typically:
+            * For Windows, execute `.\venv\Scripts\Activate.ps1` in a Windows Powershell terminal;
             * For Linux/macOS, execute `source venv/bin/activate` in a bash/zsh terminal.
     * Install dependencies
       ```bash
