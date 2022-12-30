@@ -6,6 +6,7 @@ import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from config.ConfigMonitorThread import ConfigMonitorThread
+from config.JSONConfigManager import JSONConfigManager
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
 from game.GameThread import GameThread
@@ -14,7 +15,8 @@ from input.InputHandlingThread import InputHandlingThread
 _running = True
 
 
-def stop(_):
+def stop(logger: logging.Logger):
+    logger.info("Stopping main thread loop")
     global _running
     _running = False
 
@@ -24,22 +26,28 @@ def main():
     logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s][%(levelname)s][%(name)s] %(message)s")
     logger = logging.getLogger()
 
-    # Pygame setup
+    logger.debug("Initializing pygame")
     pygame.init()
+
+    logger.debug("Creating display surface")
     display_surface = pygame.display.set_mode((1280, 720))
 
-    # Initialize asset object factory
+    logger.debug("Initializing asset object factory")
     asset_object_factory = AssetObjectFactory()
 
-    # Event dispatcher initialization
+    logger.debug("Initializing event dispatcher")
     event_dispatcher = EventDispatcher()
-    event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", stop))
+    event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", lambda _: stop(logger)))
 
-    config_monitor_thread = ConfigMonitorThread(event_dispatcher, "config.json")
+    logger.debug("Initializing config manager")
+    config_manager = JSONConfigManager("config.json", JSONConfigManager.BindingMode.DOUBLE)
+
+    logger.debug("Creating subsystem thread instances")
+    config_monitor_thread = ConfigMonitorThread(event_dispatcher, config_manager)
     input_handling_thread = InputHandlingThread(event_dispatcher)
     game_thread = GameThread(event_dispatcher, display_surface)
 
-    # Start all subsystems
+    # Starting subsystem threads
     threads = [
         config_monitor_thread,
         input_handling_thread,

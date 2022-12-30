@@ -12,9 +12,10 @@ from core.SoundObject import SoundObject
 class AssetObjectFactory:
     ASSET_DIRS = ("asset/images", "asset/sounds")
     ASSET_PROPS = {
+        # "exampleAsset": {"key": "asset.image.exampleImage"}
     }
 
-    __asset_id_path_dict = {value["id"]: key for key, value in ASSET_PROPS.items()}
+    __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
 
     def __init__(self):
         self.__logger = logging.getLogger(self.__class__.__name__)
@@ -31,25 +32,25 @@ class AssetObjectFactory:
 
         for path in asset_file_paths:
             path not in AssetObjectFactory.ASSET_PROPS and self.__logger.warning(
-                f"Asset {path} is not assigned with an ID, thus not addressable with asset manager"
+                f"Asset {path} is not assigned with an key, thus not addressable with asset manager"
             )
 
-    def new_asset_object(self, asset_id: str) -> typing.Any:
-        self.__logger.debug(f"Creating asset object with asset ID {asset_id}")
-        fields = asset_id.split('.')
+    def new_asset_object(self, asset_key: str) -> typing.Any:
+        self.__logger.debug(f"Creating asset object with asset key {asset_key}")
+        fields = asset_key.split('.')
         namespace = fields[0]
         asset_type = fields[1]
 
         if namespace != "asset":
-            self.__logger.warning(f"Not an asset ID. Object not created")
+            self.__logger.warning(f"Not an asset key. Object not created")
             return
 
         if asset_type == "image":
             self.__logger.debug("Creating an image object")
-            return ImageObject(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_id]))
+            return ImageObject(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_key]))
         if asset_type == "sound":
             self.__logger.debug("Creating an sound object")
-            return SoundObject(AssetObjectFactory.__asset_id_path_dict[asset_id])
+            return SoundObject(AssetObjectFactory.__asset_id_path_dict[asset_key])
 
-        self.__logger.debug("Unknown asset type. Object not created")
+        self.__logger.debug(f"Unknown asset type {asset_type}. Object not created")
         return

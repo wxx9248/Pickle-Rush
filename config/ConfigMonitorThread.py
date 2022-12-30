@@ -5,7 +5,6 @@ import watchdog.events
 import watchdog.observers.polling
 
 from config.AbstractConfigManager import AbstractConfigManager
-from config.JSONConfigManager import JSONConfigManager
 from core.SubsystemThread import SubsystemThread
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
@@ -31,16 +30,9 @@ def post_event_dict_changed(node, key, value):
 
 
 class ConfigMonitorThread(SubsystemThread):
-    def __init__(self, global_event_dispatcher: EventDispatcher, path: str):
+    def __init__(self, global_event_dispatcher: EventDispatcher, config_manager: AbstractConfigManager):
         super().__init__(global_event_dispatcher)
-
-        self.logger.debug(f"Using config file {path}")
-        self.__path = path
-
-        self.logger.debug(f"Creating config manager")
-        self.__config_manager: AbstractConfigManager = JSONConfigManager(
-            self.__path,
-            JSONConfigManager.BindingMode.DOUBLE)
+        self.__config_manager = config_manager
 
         self.logger.debug(f"Setting up hooks for config manager")
         self.__config_manager.after_update = post_event_dict_changed
@@ -66,7 +58,7 @@ class ConfigMonitorThread(SubsystemThread):
             CustomEventTypes.EVENT_CONFIG_DICT_UPDATED, self.name, self.__event_handler_config_dict_updated)
 
         self.logger.debug(f"Starting watchdog observer")
-        self.__file_observer.schedule(WatchdogEventAdapter(), self.__path)
+        self.__file_observer.schedule(WatchdogEventAdapter(), self.config_manager.file_path)
         self.__file_observer.start()
 
     def after_looper(self):
@@ -77,7 +69,6 @@ class ConfigMonitorThread(SubsystemThread):
         # Update config dict correspondingly
         self.logger.info("Detected config file changes. Loading new configuration...")
         self.__config_manager.sync_from_file()
-        self.logger.debug(self.__config_manager.config)
 
     def on_config_dict_updated(self, _):
         # Update config file correspondingly
