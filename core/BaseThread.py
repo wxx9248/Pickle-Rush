@@ -10,18 +10,18 @@ class BaseThread(threading.Thread):
         self.__running = True
 
     @property
-    def logger(self):
+    def logger(self) -> logging.Logger:
         return self.__logger
 
     @property
-    def running(self):
+    def running(self) -> bool:
         return self.__running
 
     def stop(self):
         self.__running = False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__class__.__name__
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__class__.__name__

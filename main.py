@@ -4,18 +4,19 @@ import logging
 
 import pygame
 
-from audio.AudioThread import AudioThread
+from asset.AssetObjectFactory import AssetObjectFactory
 from config.ConfigMonitorThread import ConfigMonitorThread
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
+from game.GameThread import GameThread
 from input.InputHandlingThread import InputHandlingThread
 
-running = True
+_running = True
 
 
 def stop(_):
-    global running
-    running = False
+    global _running
+    _running = False
 
 
 def main():
@@ -25,26 +26,35 @@ def main():
 
     # Pygame setup
     pygame.init()
+    display_surface = pygame.display.set_mode((1280, 720))
+
+    # Initialize asset object factory
+    asset_object_factory = AssetObjectFactory()
 
     # Event dispatcher initialization
     event_dispatcher = EventDispatcher()
     event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", stop))
 
+    config_monitor_thread = ConfigMonitorThread(event_dispatcher, "config.json")
+    input_handling_thread = InputHandlingThread(event_dispatcher)
+    game_thread = GameThread(event_dispatcher, display_surface)
+
     # Start all subsystems
     threads = [
-        ConfigMonitorThread(event_dispatcher, "config.json"),
-        AudioThread(event_dispatcher),
-        InputHandlingThread(event_dispatcher)
+        config_monitor_thread,
+        input_handling_thread,
+        game_thread
     ]
 
     for thread in threads:
         logger.info(f"Starting {thread}")
         thread.start()
 
-    screen = pygame.display.set_mode((600, 600))
-    while running:
+    # Some operating systems will have problems rendering graphics and dispatching events
+    # in threads other than the main thread, so handling global events and rendering here.
+    while _running:
         event_dispatcher.dispatch_all(pygame.event.get())
-        pygame.display.update()
+        not game_thread.render_queue.empty() and pygame.display.update(game_thread.render_queue.get())
 
     while len(threads):
         thread = threads.pop()

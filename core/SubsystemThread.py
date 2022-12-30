@@ -24,15 +24,15 @@ class SubsystemThread(BaseThread):
         self.__local_event_dispatcher.register(pygame.QUIT, self.name, self.__event_handler_quit)
 
     @property
-    def event_queue(self):
+    def event_queue(self) -> queue.Queue[pygame.event.Event]:
         return self.__event_queue
 
     @property
-    def local_event_dispatcher(self):
+    def local_event_dispatcher(self) -> LocalEventDispatcher:
         return self.__local_event_dispatcher
 
     @property
-    def exception(self):
+    def exception(self) -> typing.Optional[Exception]:
         return self.__exception
 
     @exception.setter
@@ -59,7 +59,7 @@ class SubsystemThread(BaseThread):
             self.exception = e
             self.stop()
 
-    def join(self, timeout: float | None = None) -> None:
+    def join(self, timeout: float | None = None):
         super().join(timeout)
         if self.__exception is not None:
             raise self.__exception

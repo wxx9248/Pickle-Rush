@@ -41,19 +41,19 @@ class AbstractConfigManager(abc.ABC):
         self.sync_from_file()
 
     @property
-    def file_path(self):
+    def file_path(self) -> str:
         return self.__file_path
 
     @property
-    def binding_mode(self):
+    def binding_mode(self) -> BindingMode:
         return self.__binding_mode
 
     @property
-    def config(self):
+    def config(self) -> ReactiveConfigNode:
         return self.__config
 
     @property
-    def after_update(self):
+    def after_update(self) -> AfterUpdateCallable:
         return self.__config.after_update
 
     @after_update.setter

@@ -14,7 +14,7 @@ class EventHandler:
         self.__callable = callback
 
     @property
-    def identifier(self):
+    def identifier(self) -> str:
         return self.__identifier
 
     def handle(self, event: pygame.event.Event):

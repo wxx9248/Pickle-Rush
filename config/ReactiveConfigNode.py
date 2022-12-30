@@ -16,11 +16,11 @@ class ReactiveConfigNode:
         self.__after_update = after_update
 
     @property
-    def config(self):
+    def config(self) -> ReactiveConfigNode | dict:
         return self.__config
 
     @property
-    def after_update(self):
+    def after_update(self) -> AfterUpdateCallable:
         return self.__after_update
 
     @after_update.setter

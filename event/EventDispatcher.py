@@ -7,14 +7,16 @@ from readerwriterlock.rwlock import RWLockWrite
 from event.EventHandler import EventHandler
 from util.util import catch_exception_and_print
 
+EventHandlerDictType: typing.TypeAlias = typing.Dict[int, typing.Dict[str, typing.Set[EventHandler]]]
+
 
 class EventDispatcher:
     def __init__(self):
-        self.__event_handler_dict: typing.Dict[int, typing.Dict[str, typing.Set[EventHandler]]] = {}
+        self.__event_handler_dict: EventHandlerDictType = {}
         self.__rwlock = RWLockWrite()
 
     @property
-    def event_handler_dict(self):
+    def event_handler_dict(self) -> EventHandlerDictType:
         return self.__event_handler_dict
 
     def register(self, event_type: int, namespace: str, handler: EventHandler):

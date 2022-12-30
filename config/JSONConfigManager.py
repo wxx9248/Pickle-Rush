@@ -37,7 +37,7 @@ class Serializer(AbstractConfigManager.Serializer):
         self.__indent = indent
 
     @property
-    def indent(self):
+    def indent(self) -> int:
         return self.__indent
 
     def serialize(self, config_node: ReactiveConfigNode) -> str:
