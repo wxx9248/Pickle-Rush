@@ -73,7 +73,10 @@ class AbstractConfigManager(abc.ABC):
         key = fields[1:]
 
         with self.__config_rw_lock.gen_rlock():
-            pass # TODO
+            item = self.__config
+            for k in key:
+                item = item[k]
+            return item
 
     def set(self, config_key: str, value: typing.Any):
         self.__logger.debug(f"Set config value {value} with key {config_key}")
@@ -82,7 +85,10 @@ class AbstractConfigManager(abc.ABC):
         key = fields[1:]
 
         with self.__config_rw_lock.gen_wlock():
-            pass # TODO
+            item = self.__config
+            for k in key[:-1]:
+                item = item[k]
+            item[key[-1]] = value
 
     def delete(self, config_key: str):
         self.__logger.debug(f"Deleting config entry with config key {config_key}")
@@ -91,7 +97,10 @@ class AbstractConfigManager(abc.ABC):
         key = fields[1:]
 
         with self.__config_rw_lock.gen_wlock():
-            pass # TODO
+            item = self.__config
+            for k in key[:-1]:
+                item = item[k]
+            del item[key[-1]]
 
     def sync_from_file(self):
         if not self.__binding_mode & AbstractConfigManager.BindingMode.FROM_FILE:

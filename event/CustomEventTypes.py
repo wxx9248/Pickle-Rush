@@ -10,6 +10,7 @@ class CustomEventTypes:
     * Names of all event types must start with `EVENT_`, or the event will not be assigned with a proper event type ID.
     * The initial value of an event type ID can be anything. The value will be overridden after the module is imported.
     """
+    EVENT_THREAD_EXCEPTION: int = None
     EVENT_CONFIG_DICT_UPDATED: int = None
     EVENT_CONFIG_FILE_UPDATED: int = None
     EVENT_CONFIG_GET: int = None

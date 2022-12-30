@@ -5,6 +5,7 @@ import typing
 import pygame
 
 from core.BaseThread import BaseThread
+from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
 from event.LocalEventDispatcher import LocalEventDispatcher
@@ -55,8 +56,16 @@ class SubsystemThread(BaseThread):
             self.looper()
             self.after_looper()
         except BaseException as e:
-            self.logger.error("Thread exception occurred. Stopping")
+            self.logger.error("Thread exception occurred")
             self.exception = e
+
+            self.logger.debug("Posting thread exception event")
+            exception_event = pygame.event.Event(CustomEventTypes.EVENT_THREAD_EXCEPTION)
+            exception_event.thread = self.name
+            exception_event.exception = e
+            pygame.event.post(exception_event)
+
+            self.logger.debug("Stopping thread")
             self.stop()
 
     def join(self, timeout: float | None = None):
