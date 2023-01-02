@@ -5,14 +5,22 @@ import typing
 
 import pygame.image
 
-from core.ImageObject import ImageObject
-from core.SoundObject import SoundObject
+from core.Sound import Sound
+from core.Sprite import Sprite
+from core.Text import Text
 
 
 class AssetObjectFactory:
-    ASSET_DIRS = ("asset/images", "asset/sounds")
+    ASSET_DIRS = ("asset/images", "asset/sounds", "asset/texts")
     ASSET_PROPS = {
-        # "exampleAsset": {"key": "asset.image.exampleImage"}
+        # "asset/images/pickle-0.png": {"key": "asset.sprite.pickle.0"},
+        # "asset/images/pickle-1.png": {"key": "asset.sprite.pickle.1"},
+        # "asset/images/pickle-2.png": {"key": "asset.sprite.pickle.2"},
+        # "asset/images/senior-pickle.png": {"key": "asset.sprite.senior-pickle"},
+        # "asset/images/bacteria.png": {"key": "asset.sprite.bacteria"},
+        "asset/texts/menu-logo.json": {"key": "asset.text.menu.logo"},
+        "asset/texts/menu-start.json": {"key": "asset.text.menu.start"},
+        "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"}
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
@@ -45,12 +53,15 @@ class AssetObjectFactory:
             self.__logger.warning(f"Not an asset key. Object not created")
             return
 
-        if asset_type == "image":
-            self.__logger.debug("Creating an image object")
-            return ImageObject(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_key]))
+        if asset_type == "sprite":
+            self.__logger.debug("Creating a sprite object")
+            return Sprite(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_key]))
         if asset_type == "sound":
-            self.__logger.debug("Creating an sound object")
-            return SoundObject(AssetObjectFactory.__asset_id_path_dict[asset_key])
+            self.__logger.debug("Creating a sound object")
+            return Sound(AssetObjectFactory.__asset_id_path_dict[asset_key])
+        if asset_type == "text":
+            self.__logger.debug("Creating a text object")
+            return Text(AssetObjectFactory.__asset_id_path_dict[asset_key])
 
         self.__logger.debug(f"Unknown asset type {asset_type}. Object not created")
         return

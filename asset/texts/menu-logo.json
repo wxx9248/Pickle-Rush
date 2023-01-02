@@ -1,0 +1,13 @@
+{
+  "boxSize": {
+    "width": 230,
+    "height": 35
+  },
+  "font": "default",
+  "fontSize": 48,
+  "bold": true,
+  "italic": false,
+  "color": "white",
+  "backgroundColor": null,
+  "content": "Pickle Rush"
+}

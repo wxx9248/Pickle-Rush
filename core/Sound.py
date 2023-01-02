@@ -2,6 +2,6 @@
 import pygame.mixer
 
 
-class SoundObject(pygame.mixer.Sound):
+class Sound(pygame.mixer.Sound):
     def __init__(self, file):
         super().__init__(file)

@@ -1,0 +1,13 @@
+{
+  "boxSize": {
+    "width": 100,
+    "height": 100
+  },
+  "font": "default",
+  "fontSize": 16,
+  "bold": false,
+  "italic": false,
+  "color": "white",
+  "backgroundColor": null,
+  "content": "Start!"
+}
