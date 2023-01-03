@@ -13,7 +13,7 @@ class CustomEventTypes:
     EVENT_THREAD_EXCEPTION: int = None
     EVENT_CONFIG_DICT_UPDATED: int = None
     EVENT_CONFIG_FILE_UPDATED: int = None
-    EVENT_STAGE_CHANGE_SCENE: int = None
+    EVENT_STAGE_CHANGE_SCENE_REQUEST: int = None
 
 
 # Executed when first imported

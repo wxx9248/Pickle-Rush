@@ -11,9 +11,7 @@ from core.Stage import Stage
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
-from game.GameThread import GameThread
 from game.scene.Menu import Menu
-from input.InputHandlingThread import InputHandlingThread
 
 _running = True
 
@@ -52,24 +50,22 @@ def main():
     stage = Stage(display_surface)
 
     logger.debug("Setting starting scene")
-    stage.scene = Menu(asset_object_factory)
+    stage.scene = Menu(display_surface.get_size(), asset_object_factory)
 
     logger.debug("Initializing event dispatcher")
     event_dispatcher = EventDispatcher()
     event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", lambda _: stop(logger)))
-    event_dispatcher.register(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE, "root",
-                              EventHandler("change-scene", lambda e: change_scene(e.scene_key)))
+    event_dispatcher.register(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST, "root",
+                              EventHandler("change-scene-request", lambda e: change_scene(e.scene_key)))
+    event_dispatcher.register(pygame.KEYDOWN, "root", EventHandler("key-down", lambda e: stage.accept_input_event(e)))
+    event_dispatcher.register(pygame.KEYUP, "root", EventHandler("key-up", lambda e: stage.accept_input_event(e)))
 
     logger.debug("Creating subsystem thread instances")
     config_monitor_thread = ConfigMonitorThread(event_dispatcher, config_manager)
-    input_handling_thread = InputHandlingThread(event_dispatcher)
-    game_thread = GameThread(event_dispatcher, stage)
 
     # Starting subsystem threads
     threads = [
-        config_monitor_thread,
-        input_handling_thread,
-        game_thread
+        config_monitor_thread
     ]
 
     for thread in threads:
@@ -82,9 +78,9 @@ def main():
     fps = config_manager.get("config.graphics.fps")
     while _running:
         event_dispatcher.dispatch_all(pygame.event.get())
-        display_surface.fill(pygame.Color("black"))
+        stage.scene.update()
         stage.scene.render(display_surface)
-        pygame.display.flip()
+        pygame.display.update()
         clock.tick(fps)
 
     while len(threads):

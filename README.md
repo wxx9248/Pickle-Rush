@@ -52,10 +52,10 @@ Please refer to https://docs.python.org/3.10/library/venv.html for documentation
 
 1. Format your code before committing changes.
 2. Annotate type of every variable if possible.
-3. No deep nesting in the code.
-   If you find your code uses more than 4 indentations, you need to cut it down possibly by:
+3. Avoid deep nesting in the code.
+   If the code uses more than 4 indentations, you may need to cut it down possibly by:
     * Converting `if-else` statements to `if` guards;
     * Refactoring the logic into smaller functions;
-    * Use [`itertools`](https://docs.python.org/3/library/itertools.html) to flatten loops;
+    * Using [`itertools`](https://docs.python.org/3/library/itertools.html) to flatten loops;
 4. Write good comments when code cannot document itself.
 5. Use private fields and property decorator for class attributes

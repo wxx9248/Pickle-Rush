@@ -13,11 +13,11 @@ from core.Text import Text
 class AssetObjectFactory:
     ASSET_DIRS = ("asset/images", "asset/sounds", "asset/texts")
     ASSET_PROPS = {
-        # "asset/images/pickle-0.png": {"key": "asset.sprite.pickle.0"},
-        # "asset/images/pickle-1.png": {"key": "asset.sprite.pickle.1"},
-        # "asset/images/pickle-2.png": {"key": "asset.sprite.pickle.2"},
-        # "asset/images/senior-pickle.png": {"key": "asset.sprite.senior-pickle"},
-        # "asset/images/bacteria.png": {"key": "asset.sprite.bacteria"},
+        "asset/images/pickle-0.png": {"key": "asset.sprite.pickle.0"},
+        "asset/images/pickle-1.png": {"key": "asset.sprite.pickle.1"},
+        "asset/images/pickle-2.png": {"key": "asset.sprite.pickle.2"},
+        "asset/images/senior-pickle.png": {"key": "asset.sprite.senior-pickle"},
+        "asset/images/bacteria.png": {"key": "asset.sprite.bacteria"},
         "asset/texts/menu-logo.json": {"key": "asset.text.menu.logo"},
         "asset/texts/menu-start.json": {"key": "asset.text.menu.start"},
         "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"}

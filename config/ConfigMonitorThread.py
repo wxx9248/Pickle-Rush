@@ -53,9 +53,9 @@ class ConfigMonitorThread(SubsystemThread):
     def before_looper(self):
         self.logger.debug(f"Registering event handlers")
         self.local_event_dispatcher.register(
-            CustomEventTypes.EVENT_CONFIG_FILE_UPDATED, self.name, self.__event_handler_config_file_updated)
+            CustomEventTypes.EVENT_CONFIG_FILE_UPDATED, "default", self.__event_handler_config_file_updated)
         self.local_event_dispatcher.register(
-            CustomEventTypes.EVENT_CONFIG_DICT_UPDATED, self.name, self.__event_handler_config_dict_updated)
+            CustomEventTypes.EVENT_CONFIG_DICT_UPDATED, "default", self.__event_handler_config_dict_updated)
 
         self.logger.debug(f"Starting watchdog observer")
         self.__file_observer.schedule(WatchdogEventAdapter(), self.config_manager.file_path)

@@ -38,3 +38,6 @@ class Stage:
         self.__before_scene_change()
         self.__scene = value
         self.__after_scene_change()
+
+    def accept_input_event(self, event: pygame.event.Event):
+        self.__scene.accept_input_event(event)

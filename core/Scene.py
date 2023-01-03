@@ -3,17 +3,31 @@ import typing
 
 import pygame.mixer
 
+from core.Atlas import Atlas
 from core.LayerManager import LayerManager
 from core.Sound import Sound
+from core.Sprite import Sprite
 
 
 class Scene:
-    def __init__(self):
-        self.__background_music = None
+    def __init__(self, size: typing.Tuple[int, int]):
+        self.__size = size
+
+        default_background_surface = pygame.surface.Surface(size)
+        default_background_surface.fill(pygame.Color("black"))
+        self.__background: Atlas = Atlas()
+        self.__background["default-background"] = Sprite(default_background_surface)
+        self.__background.current_sprite_key = "default-background"
+
+        self.__background_music: typing.Optional[Sound] = None
 
         self.__layer_manager = LayerManager()
         self.__sound_fx_dict: typing.Dict[str, Sound] = {}
         self.__background_music_channel: pygame.mixer.Channel = pygame.mixer.Channel(0)
+
+    @property
+    def size(self):
+        return self.size
 
     @property
     def layer_manager(self):
@@ -28,6 +42,14 @@ class Scene:
         return self.__background_music_channel
 
     @property
+    def background(self):
+        return self.__background
+
+    @background.setter
+    def background(self, value: Atlas):
+        self.__background = value
+
+    @property
     def background_music(self):
         return self.__background_music
 
@@ -39,4 +61,8 @@ class Scene:
         self.__layer_manager.update()
 
     def render(self, surface: pygame.surface.Surface):
+        self.__background.render(surface)
         self.__layer_manager.render(surface)
+
+    def accept_input_event(self, event: pygame.event.Event):
+        pass
