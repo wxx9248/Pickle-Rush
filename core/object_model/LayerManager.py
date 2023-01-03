@@ -5,7 +5,7 @@ import typing
 
 import pygame.surface
 
-from core.Layer import Layer
+from core.object_model.Layer import Layer
 
 
 class LayerManager:

@@ -3,7 +3,7 @@ import typing
 
 import pygame.sprite
 
-from core.Atlas import Atlas
+from core.object_model.Atlas import Atlas
 
 
 class Layer:

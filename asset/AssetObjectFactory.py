@@ -5,9 +5,9 @@ import typing
 
 import pygame.image
 
-from core.Sound import Sound
-from core.Sprite import Sprite
-from core.Text import Text
+from core.object_model.Sound import Sound
+from core.object_model.Sprite import Sprite
+from core.object_model.Text import Text
 
 
 class AssetObjectFactory:

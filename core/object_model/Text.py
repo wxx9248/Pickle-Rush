@@ -4,7 +4,7 @@ import typing
 
 import pygame
 
-from core.Sprite import Sprite
+from core.object_model.Sprite import Sprite
 
 
 class Text(Sprite):

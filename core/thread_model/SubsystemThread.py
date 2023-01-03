@@ -2,7 +2,7 @@
 
 import pygame
 
-from core.BaseThread import BaseThread
+from core.thread_model.BaseThread import BaseThread
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler

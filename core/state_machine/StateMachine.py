@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import typing
 
-from util.state_machine.NoNextStateException import NoNextStateException
-from util.state_machine.State import State
-from util.state_machine.TransitionGroup import TransitionGroup
+from core.state_machine.NoNextStateException import NoNextStateException
+from core.state_machine.State import State
+from core.state_machine.TransitionGroup import TransitionGroup
 
 ExciterType: typing.TypeAlias = typing.Any
 

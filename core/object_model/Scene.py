@@ -3,10 +3,10 @@ import typing
 
 import pygame.mixer
 
-from core.Atlas import Atlas
-from core.LayerManager import LayerManager
-from core.Sound import Sound
-from core.Sprite import Sprite
+from core.object_model.Atlas import Atlas
+from core.object_model.LayerManager import LayerManager
+from core.object_model.Sound import Sound
+from core.object_model.Sprite import Sprite
 
 
 class Scene:

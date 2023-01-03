@@ -7,7 +7,7 @@ import pygame
 from asset.AssetObjectFactory import AssetObjectFactory
 from config.ConfigMonitorThread import ConfigMonitorThread
 from config.JSONConfigManager import JSONConfigManager
-from core.Stage import Stage
+from core.object_model.Stage import Stage
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler

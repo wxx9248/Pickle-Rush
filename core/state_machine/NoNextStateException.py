@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from util.state_machine.StateMachine import StateMachine
-from util.state_machine.TransitionGroup import TransitionGroup
+from core.state_machine.StateMachine import StateMachine
+from core.state_machine.TransitionGroup import TransitionGroup
 
 
 class NoNextStateException(Exception):

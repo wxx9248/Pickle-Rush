@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import typing
 
-from util.state_machine.State import State
-from util.state_machine.StateMachine import ExciterType
+from core.state_machine.State import State
+from core.state_machine.StateMachine import ExciterType
 
 
 class TransitionGroup:

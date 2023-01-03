@@ -5,7 +5,7 @@ import watchdog.events
 import watchdog.observers.polling
 
 from config.AbstractConfigManager import AbstractConfigManager
-from core.SubsystemThread import SubsystemThread
+from core.thread_model.SubsystemThread import SubsystemThread
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler

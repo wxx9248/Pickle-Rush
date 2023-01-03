@@ -2,9 +2,9 @@
 import typing
 
 from asset.AssetObjectFactory import AssetObjectFactory
-from core.Atlas import Atlas
-from core.Layer import Layer
-from core.Scene import Scene
+from core.object_model.Atlas import Atlas
+from core.object_model.Layer import Layer
+from core.object_model.Scene import Scene
 
 
 class Menu(Scene):

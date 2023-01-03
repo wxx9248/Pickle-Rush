@@ -3,7 +3,7 @@ import typing
 
 import pygame.surface
 
-from core.Scene import Scene
+from core.object_model.Scene import Scene
 
 
 class Stage:
