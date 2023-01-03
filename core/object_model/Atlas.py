@@ -9,24 +9,25 @@ from core.object_model.Sprite import Sprite
 
 
 class Atlas:
-    MOVEMENT_UNIT = 1
-
     def __init__(self):
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
         self.__current_sprite: typing.Optional[Sprite] = None
         self.__current_sprite_key: typing.Optional[str] = None
-        self.__position: typing.List[int, int] = [0, 0]
+        self.__position = pygame.Vector2(0, 0)
         self.__speed = pygame.Vector2(0, 0)
         self.__acceleration = pygame.Vector2(0, 0)
 
     @property
-    def position(self) -> typing.Tuple[int, int]:
-        return self.__position[0], self.__position[1]
+    def position(self) -> typing.Tuple[float, float]:
+        return self.__position.x, self.__position.y
+
+    @property
+    def position_int(self) -> typing.Tuple[int, int]:
+        return int(self.__position.x), int(self.__position.y)
 
     @position.setter
-    def position(self, value: typing.Tuple[int, int]):
-        self.__position[0] = value[0]
-        self.__position[1] = value[1]
+    def position(self, value: typing.Tuple[float, float]):
+        self.__position.update(value)
 
     @property
     def speed(self) -> typing.Tuple[float, float]:
@@ -59,7 +60,9 @@ class Atlas:
     def render(self, surface: pygame.surface.Surface):
         if self.__current_sprite is None:
             return
-        surface.blit(self.__current_sprite.surface, self.__position)
+        self.__speed += self.__acceleration
+        self.__position += self.__speed
+        surface.blit(self.__current_sprite.surface, self.position_int)
 
     def update(self):
         pass

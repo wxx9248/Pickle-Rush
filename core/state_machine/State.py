@@ -5,9 +5,9 @@ import typing
 
 
 class State:
-    def __init__(self, identifier: str, ticker: typing.Callable[[State], None]):
+    def __init__(self, identifier: str, updater: typing.Callable[[State], None]):
         self.__identifier = identifier
-        self.__ticker = ticker
+        self.__updater = updater
         self.__store: typing.Dict = {}
 
     @property
@@ -15,8 +15,8 @@ class State:
         return self.__identifier
 
     @property
-    def ticker(self):
-        return self.__ticker
+    def updater(self):
+        return self.__updater
 
     @property
     def store(self):
@@ -26,7 +26,7 @@ class State:
         self.__store = {}
 
     def update(self):
-        self.__ticker(self)
+        self.__updater(self)
 
     def __hash__(self):
         return hash(self.__identifier)

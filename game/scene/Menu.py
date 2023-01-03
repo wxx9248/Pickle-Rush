@@ -14,7 +14,7 @@ class Menu(Scene):
         logo = asset_object_factory.new_asset_object("asset.text.menu.logo")
         atlas = Atlas()
         atlas["logo"] = logo
-        atlas.position = (100, 100)
+        atlas.position = (0, 0)
         atlas.current_sprite_key = "logo"
 
         layer = Layer(atlas)

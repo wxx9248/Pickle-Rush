@@ -80,12 +80,16 @@ class StateMachine:
         if type(state) is not State:
             state = self.__state_dict[state]
 
+        # Remove state and corresponding transition group from dictionary
         del self.__state_dict[state.identifier]
         del self.__transition_group_dict[state.identifier]
+
+        # Remove all connections where the target state is a destination in each transition group
         [transition_group.remove_connection(state)
          for transition_group in self.__transition_group_dict.values()
          if state in transition_group]
 
+        # Remove other references if necessary
         if self.__start_state == state:
             self.__start_state = None
         if self.__current_state == state:
@@ -93,8 +97,10 @@ class StateMachine:
         if self.__end_state == state:
             self.__end_state = None
 
-    def register_transition_group(self, transition: TransitionGroup):
-        self.__transition_group_dict[transition.source_state.identifier] = transition
+    def register_transition_group(self, source_state: State | str, transition: TransitionGroup):
+        if type(source_state) is not State:
+            source_state = self.__state_dict[source_state]
+        self.__transition_group_dict[source_state.identifier] = transition
 
     def remove_transition_group(self, source_state: State | str):
         if type(source_state) is not State:
