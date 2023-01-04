@@ -30,6 +30,22 @@ class Atlas:
         self.__position.update(value)
 
     @property
+    def position_x(self) -> float:
+        return self.__position.x
+
+    @position_x.setter
+    def position_x(self, value: float):
+        self.__position.x = value
+
+    @property
+    def position_y(self) -> float:
+        return self.__position.y
+
+    @position_y.setter
+    def position_y(self, value: float):
+        self.__position.y = value
+
+    @property
     def speed(self) -> typing.Tuple[float, float]:
         return self.__speed.x, self.__speed.y
 
@@ -38,12 +54,44 @@ class Atlas:
         self.__speed.update(value)
 
     @property
+    def speed_x(self) -> float:
+        return self.__speed.x
+
+    @speed_x.setter
+    def speed_x(self, value: float):
+        self.__speed.x = value
+
+    @property
+    def speed_y(self) -> float:
+        return self.__speed.y
+
+    @speed_y.setter
+    def speed_y(self, value: float):
+        self.__speed.y = value
+
+    @property
     def acceleration(self):
         return self.__acceleration.x, self.__acceleration.y
 
     @acceleration.setter
     def acceleration(self, value: typing.Tuple[float, float]):
         self.__acceleration.update(value)
+
+    @property
+    def acceleration_x(self) -> float:
+        return self.__acceleration.x
+
+    @acceleration_x.setter
+    def acceleration_x(self, value: float):
+        self.__acceleration.x = value
+
+    @property
+    def acceleration_y(self) -> float:
+        return self.__acceleration.y
+
+    @acceleration_y.setter
+    def acceleration_y(self, value: float):
+        self.__acceleration.y = value
 
     @property
     def current_sprite_key(self) -> typing.Optional[str]:

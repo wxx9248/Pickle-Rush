@@ -1,4 +1,3 @@
-numpy==1.24.0
 pygame==2.1.2
 readerwriterlock==1.0.9
 typing_extensions==4.4.0

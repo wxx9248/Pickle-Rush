@@ -27,7 +27,7 @@ class Scene:
 
     @property
     def size(self):
-        return self.size
+        return self.__size
 
     @property
     def layer_manager(self):

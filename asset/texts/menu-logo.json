@@ -1,11 +1,8 @@
 {
-  "boxSize": {
-    "width": 230,
-    "height": 35
-  },
+  "wrap": null,
   "font": "default",
-  "fontSize": 48,
-  "bold": true,
+  "fontSize": 128,
+  "bold": false,
   "italic": false,
   "color": "white",
   "backgroundColor": null,
