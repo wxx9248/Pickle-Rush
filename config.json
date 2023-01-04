@@ -1,0 +1,16 @@
+{
+  "debug": true,
+  "game": {},
+  "audio": {
+    "backgroundMusicLevel": 100,
+    "sfxLevel": 100
+  },
+  "graphics": {
+    "fps": 60,
+    "resolution": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "input": {}
+}

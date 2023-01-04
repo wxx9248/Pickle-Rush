@@ -1,0 +1,4 @@
+pygame==2.1.2
+readerwriterlock==1.0.9
+typing_extensions==4.4.0
+watchdog==2.2.0
