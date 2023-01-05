@@ -11,10 +11,6 @@ from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
 
 
-# TODO: Reminder: There also may be a performance issue if too many write operations happen at one time.
-#   Considering caching those operations with an event queue if needs very frequent write operation.
-
-
 class WatchdogEventAdapter(watchdog.events.FileSystemEventHandler):
     def on_modified(self, event: watchdog.events.FileSystemEvent):
         if not event.is_directory:
@@ -34,7 +30,7 @@ class ConfigMonitorThread(SubsystemThread):
         super().__init__(global_event_dispatcher)
         self.__config_manager = config_manager
 
-        self.logger.debug(f"Setting up hooks for config manager")
+        self.logger.debug(f"Setting after-update callback config manager")
         self.__config_manager.after_update = post_event_dict_changed
 
         self.logger.debug(f"Setting up watchdog observer")

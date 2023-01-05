@@ -20,7 +20,8 @@ class AssetObjectFactory:
         "asset/images/bacteria.png": {"key": "asset.sprite.bacteria"},
         "asset/texts/menu-logo.json": {"key": "asset.text.menu.logo"},
         "asset/texts/menu-start.json": {"key": "asset.text.menu.start"},
-        "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"}
+        "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"},
+        "asset/texts/menu-cursor.json": {"key": "asset.text.menu.cursor"}
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}

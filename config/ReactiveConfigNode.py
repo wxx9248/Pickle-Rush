@@ -5,10 +5,7 @@ import typing
 
 
 class ReactiveConfigNode:
-    def __init__(
-            self, config: ReactiveConfigNode | dict = None,
-            after_update: AfterUpdateCallable = None):
-
+    def __init__(self, config: ReactiveConfigNode | dict = None, after_update: AfterUpdateCallable = None):
         self.__config = config
         if config is None:
             self.__config = {}
