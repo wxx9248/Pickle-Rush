@@ -9,10 +9,15 @@ from core.object_model.Sprite import Sprite
 
 
 class Atlas:
-    def __init__(self):
+    def __init__(self, default_sprite: typing.Optional[Sprite] = None):
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
+
         self.__current_sprite: typing.Optional[Sprite] = None
         self.__current_sprite_key: typing.Optional[str] = None
+        if default_sprite is not None:
+            self["default"] = default_sprite
+            self.current_sprite_key = "default"
+
         self.__position = pygame.Vector2(0, 0)
         self.__speed = pygame.Vector2(0, 0)
         self.__acceleration = pygame.Vector2(0, 0)
@@ -113,6 +118,9 @@ class Atlas:
         surface.blit(self.__current_sprite.surface, self.position_int)
 
     def update(self):
+        pass
+
+    def accept_input_event(self, event: pygame.event.Event):
         pass
 
     def __setitem__(self, key: str, item: typing.Any):

@@ -59,12 +59,13 @@ class AbstractConfigManager(abc.ABC):
 
     @after_update.setter
     def after_update(self, value: AfterUpdateCallable):
-        def setter(_, v: typing.Any):
+        def executor(_, v: typing.Any):
             if type(v) is ReactiveConfigNode:
                 v.after_update = value
 
-        setter("", self.__config)
-        self.__config.dfs_traverse(setter)
+        self.__logger.debug(f"Set after-update callback for all config nodes")
+        executor("", self.__config)
+        self.__config.dfs_traverse(executor)
 
     def get(self, config_key: str):
         self.__logger.debug(f"Get config entry with key {config_key}")
@@ -103,6 +104,7 @@ class AbstractConfigManager(abc.ABC):
             del item[key[-1]]
 
     def sync_from_file(self):
+        self.__logger.debug(f"Syncing config dict from file")
         if not self.__binding_mode & AbstractConfigManager.BindingMode.FROM_FILE:
             return
 
@@ -112,6 +114,7 @@ class AbstractConfigManager(abc.ABC):
                 self.__config = config
 
     def sync_to_file(self):
+        self.__logger.debug(f"Syncing config dict to file")
         if not self.__binding_mode & AbstractConfigManager.BindingMode.TO_FILE:
             return
 

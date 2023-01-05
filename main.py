@@ -17,13 +17,9 @@ _running = True
 
 
 def stop(logger: logging.Logger):
-    logger.info("Stopping main thread loop")
+    logger.debug("Stopping main thread loop")
     global _running
     _running = False
-
-
-def change_scene(scene_key: str):
-    pass
 
 
 def main():
@@ -56,7 +52,7 @@ def main():
     event_dispatcher = EventDispatcher()
     event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", lambda _: stop(logger)))
     event_dispatcher.register(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST, "root",
-                              EventHandler("change-scene-request", lambda e: change_scene(e.scene_key)))
+                              EventHandler("change-scene-request", lambda e: stage.set_scene(e.scene)))
     event_dispatcher.register(pygame.KEYDOWN, "root", EventHandler("key-down", lambda e: stage.accept_input_event(e)))
     event_dispatcher.register(pygame.KEYUP, "root", EventHandler("key-up", lambda e: stage.accept_input_event(e)))
 

@@ -20,3 +20,7 @@ class Layer:
     def render(self, surface: pygame.surface.Surface):
         for atlas in self.__atlases:
             atlas.render(surface)
+
+    def accept_input_event(self, event: pygame.event.Event):
+        for atlas in self.__atlases:
+            atlas.accept_input_event(event)
