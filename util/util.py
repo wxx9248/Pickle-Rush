@@ -39,3 +39,4 @@ def text_render_get_font_object(font: str | typing.List[str], font_size: int, bo
 def center(container_size: typing.Tuple[float, float], element_size: typing.Tuple[float, float]) \
         -> typing.Tuple[float, float]:
     return (container_size[0] - element_size[0]) / 2, (container_size[1] - element_size[1]) / 2
+

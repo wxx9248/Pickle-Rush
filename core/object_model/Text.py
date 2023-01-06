@@ -20,13 +20,13 @@ class Text(Sprite):
         self.__content = definition["content"]
 
         if self.__wrap is None:
-            super().__init__(self.freeform_renderer(), *groups)
+            super().__init__(self.freeform_renderer().convert_alpha(), *groups)
             return
 
         if self.__wrap == "word":
             self.__box_size_width = definition["boxSize"]["width"]
             self.__box_size_height = definition["boxSize"]["height"]
-            super().__init__(self.word_wrapped_renderer(), *groups)
+            super().__init__(self.word_wrapped_renderer().convert_alpha(), *groups)
             return
 
         raise NotImplementedError(f"Unsupported wrapping method {self.__wrap}")

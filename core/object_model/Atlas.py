@@ -11,16 +11,18 @@ from core.object_model.Sprite import Sprite
 class Atlas:
     def __init__(self, default_sprite: typing.Optional[Sprite] = None):
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
-
-        self.__current_sprite: typing.Optional[Sprite] = None
+        self.__cached_sprite_surfaces: typing.Dict[str, pygame.surface.Surface] = {}
         self.__current_sprite_key: typing.Optional[str] = None
-        if default_sprite is not None:
-            self["default"] = default_sprite
-            self.current_sprite_key = "default"
 
         self.__position = pygame.Vector2(0, 0)
         self.__speed = pygame.Vector2(0, 0)
         self.__acceleration = pygame.Vector2(0, 0)
+        self.__opacity: int = 255
+        self.__scale = pygame.Vector2(1, 1)
+
+        if default_sprite is not None:
+            self["default"] = default_sprite
+            self.current_sprite_key = "default"
 
     @property
     def position(self) -> typing.Tuple[float, float]:
@@ -99,6 +101,46 @@ class Atlas:
         self.__acceleration.y = value
 
     @property
+    def opacity(self):
+        return self.__opacity
+
+    @opacity.setter
+    def opacity(self, value: int):
+        if value > 255:
+            value = 255
+        if value < 0:
+            value = 0
+        self.__opacity = value
+        self.update_surface_cache_opacity()
+
+    @property
+    def scale(self):
+        return self.__scale.x, self.__scale.y
+
+    @scale.setter
+    def scale(self, value: typing.Tuple[float, float]):
+        self.__scale.update(value)
+        self.update_surface_cache_scale()
+
+    @property
+    def scale_x(self) -> float:
+        return self.__scale.x
+
+    @scale_x.setter
+    def scale_x(self, value: float):
+        self.__scale.x = value
+        self.update_surface_cache_scale()
+
+    @property
+    def scale_y(self) -> float:
+        return self.__scale.y
+
+    @scale_y.setter
+    def scale_y(self, value: float):
+        self.__scale.y = value
+        self.update_surface_cache_scale()
+
+    @property
     def current_sprite_key(self) -> typing.Optional[str]:
         return self.__current_sprite_key
 
@@ -106,16 +148,40 @@ class Atlas:
     def current_sprite_key(self, value: typing.Optional[str]):
         self.__current_sprite_key = value
         if self.__current_sprite_key is None:
-            self.__current_sprite = None
+            self.__current_sprite_surface = None
             return
-        self.__current_sprite = self.__sprite_dict[self.__current_sprite_key]
+        self.__current_sprite_surface = self.__cached_sprite_surfaces[self.__current_sprite_key]
+
+    def update_surface_cache_scale(self, key: typing.Optional[str] = None):
+        iterable = self.__sprite_dict
+        if key is not None:
+            iterable = {key: self.__sprite_dict[key]}
+
+        for key, sprite in iterable.items():
+            self.__cached_sprite_surfaces[key] = pygame.transform.scale(
+                sprite.surface,
+                (self.__scale.x * sprite.surface.get_width(), self.__scale.y * sprite.surface.get_height())
+            )
+
+    def update_surface_cache_opacity(self, key: typing.Optional[str] = None):
+        iterable = self.__cached_sprite_surfaces.values()
+        if key is not None:
+            iterable = [self.__cached_sprite_surfaces[key]]
+
+        for sprite in iterable:
+            sprite.set_alpha(self.__opacity)
+
+    def update_surface_cache(self, key: typing.Optional[str] = None):
+        self.update_surface_cache_scale(key)
+        self.update_surface_cache_opacity(key)
 
     def render(self, surface: pygame.surface.Surface):
-        if self.__current_sprite is None:
+        if self.__current_sprite_surface is None:
             return
         self.__speed += self.__acceleration
         self.__position += self.__speed
-        surface.blit(self.__current_sprite.surface, self.position_int)
+
+        surface.blit(self.__current_sprite_surface, self.position_int)
 
     def update(self):
         pass
@@ -123,8 +189,9 @@ class Atlas:
     def accept_input_event(self, event: pygame.event.Event):
         pass
 
-    def __setitem__(self, key: str, item: typing.Any):
+    def __setitem__(self, key: str, item: Sprite):
         self.__sprite_dict[key] = item
+        self.update_surface_cache(key)
 
     def __getitem__(self, key: str):
         item = self.__sprite_dict[key]
@@ -141,6 +208,9 @@ class Atlas:
 
     def __delitem__(self, key: str):
         del self.__sprite_dict[key]
+        del self.__cached_sprite_surfaces[key]
+        if self.__current_sprite_key == key:
+            self.current_sprite_key = None
 
     def __cmp__(self, other: Atlas):
         return self.__cmp__(other)
