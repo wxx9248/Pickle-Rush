@@ -5,6 +5,7 @@ from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
 from core.object_model.Layer import Layer
 from core.object_model.Scene import Scene
+from game.atlas.PickleAtlas import PickleAtlas
 
 
 class Test(Scene):
@@ -15,7 +16,7 @@ class Test(Scene):
         pickle_sprite_1 = asset_object_factory.new_asset_object("asset.sprite.pickle.1")
         pickle_sprite_2 = asset_object_factory.new_asset_object("asset.sprite.pickle.2")
 
-        self.logo_atlas = Atlas()
+        self.logo_atlas = PickleAtlas()
         self.logo_atlas.scale = (0.5, 0.5)
         self.logo_atlas.opacity = 100
         self.logo_atlas["pickle-0"] = pickle_sprite_0

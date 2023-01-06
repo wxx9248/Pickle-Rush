@@ -167,3 +167,10 @@ class StateMachine:
 
     def items(self):
         return self.__state_dict.items()
+
+
+class NoNextStateException(Exception):
+    def __init__(self, state_machine: StateMachine, transition_group: TransitionGroup, *args):
+        super().__init__(args)
+        self.state_machine = state_machine
+        self.transition_group = transition_group

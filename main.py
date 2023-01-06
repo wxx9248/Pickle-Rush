@@ -82,7 +82,6 @@ def main():
         stage.scene.render(display_surface)
         pygame.display.update()
         tick = frame_rate_stabilizer.get_tick.send(clock.get_fps())
-        print(clock.get_fps())
         clock.tick(tick)
 
     while len(threads):
