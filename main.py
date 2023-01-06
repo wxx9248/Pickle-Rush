@@ -12,6 +12,7 @@ from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
 from event.EventHandler import EventHandler
 from game.scene.Menu import Menu
+from util.FrameRateStabilizer import FrameRateStabilizer
 
 _running = True
 
@@ -48,6 +49,11 @@ def main():
     logger.debug("Setting starting scene")
     stage.scene = Menu(display_surface.get_size(), asset_object_factory)
 
+    logger.debug("Initializing frame rate stabilizer")
+    target_fps = config_manager.get("config.graphics.fps")
+    frame_rate_stabilizer = FrameRateStabilizer(target_fps)
+    next(frame_rate_stabilizer.get_tick)
+
     logger.debug("Initializing event dispatcher")
     event_dispatcher = EventDispatcher()
     event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", lambda _: stop(logger)))
@@ -68,16 +74,16 @@ def main():
         logger.debug(f"Starting {thread}")
         thread.start()
 
-    # Some operating systems will have problems rendering graphics and dispatching events
-    # in threads other than the main thread, so handling global events and rendering here.
     clock = pygame.time.Clock()
-    fps = config_manager.get("config.graphics.fps")
+
     while _running:
         event_dispatcher.dispatch_all(pygame.event.get())
         stage.scene.update()
         stage.scene.render(display_surface)
         pygame.display.update()
-        clock.tick(fps)
+        tick = frame_rate_stabilizer.get_tick.send(clock.get_fps())
+        print(clock.get_fps())
+        clock.tick(tick)
 
     while len(threads):
         thread = threads.pop()

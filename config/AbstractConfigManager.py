@@ -67,7 +67,7 @@ class AbstractConfigManager(abc.ABC):
         executor("", self.__config)
         self.__config.dfs_traverse(executor)
 
-    def get(self, config_key: str):
+    def get(self, config_key: str) -> typing.Any:
         self.__logger.debug(f"Get config entry with key {config_key}")
         fields = config_key.split('.')
         namespace = fields[0]
