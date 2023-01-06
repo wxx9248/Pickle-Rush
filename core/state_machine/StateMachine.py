@@ -4,8 +4,10 @@ from __future__ import annotations
 import typing
 
 from core.state_machine.NoNextStateException import NoNextStateException
-from core.state_machine.State import State
-from core.state_machine.TransitionGroup import TransitionGroup
+
+if typing.TYPE_CHECKING:
+    from core.state_machine.TransitionGroup import TransitionGroup
+    from core.state_machine.State import State
 
 ExciterType: typing.TypeAlias = typing.Any
 

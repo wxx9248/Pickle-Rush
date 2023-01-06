@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-from core.state_machine.StateMachine import StateMachine
-from core.state_machine.TransitionGroup import TransitionGroup
+from __future__ import annotations
+import typing
+
+if typing.TYPE_CHECKING:
+    from core.state_machine.StateMachine import StateMachine
+    from core.state_machine.TransitionGroup import TransitionGroup
 
 
 class NoNextStateException(Exception):
