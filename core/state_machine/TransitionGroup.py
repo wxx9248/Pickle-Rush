@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-
 import typing
 
 from core.state_machine.State import State
