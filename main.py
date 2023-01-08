@@ -40,14 +40,11 @@ def main():
          config_manager.get("config.graphics.resolution.height"))
     )
 
-    logger.debug("Initializing asset object factory")
-    asset_object_factory = AssetObjectFactory()
-
     logger.debug("Initializing stage")
     stage = Stage(display_surface)
 
     logger.debug("Setting starting scene")
-    stage.scene = Menu(display_surface.get_size(), asset_object_factory)
+    stage.scene = Menu(display_surface.get_size())
 
     logger.debug("Initializing frame rate stabilizer")
     target_fps = config_manager.get("config.graphics.fps")
@@ -82,7 +79,6 @@ def main():
         stage.scene.render(display_surface)
         pygame.display.update()
         tick = frame_rate_stabilizer.get_tick.send(clock.get_fps())
-        print(clock.get_fps())
         clock.tick(tick)
 
     while len(threads):

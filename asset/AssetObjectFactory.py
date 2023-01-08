@@ -25,24 +25,32 @@ class AssetObjectFactory:
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
+    __instance = None
 
-    def __init__(self):
-        self.__logger = logging.getLogger(self.__class__.__name__)
+    def __new__(cls, *args, **kwargs):
+        def init(instance):
+            instance.__logger = logging.getLogger(instance.__class__.__name__)
 
-        self.__logger.info("Scanning asset directories")
-        asset_file_paths = []
-        for target_dir in AssetObjectFactory.ASSET_DIRS:
-            self.__logger.debug(f"Scanning {target_dir}")
-            asset_file_paths.extend([os.path.join(directory, file)
-                                     for directory, _, filenames in os.walk(target_dir)
-                                     for file in filenames])
+            instance.__logger.info("Scanning asset directories")
+            asset_file_paths = []
+            for target_dir in AssetObjectFactory.ASSET_DIRS:
+                instance.__logger.debug(f"Scanning {target_dir}")
+                asset_file_paths.extend([os.path.join(directory, file)
+                                         for directory, _, filenames in os.walk(target_dir)
+                                         for file in filenames])
 
-        self.__logger.debug(f"Scan result: {asset_file_paths}")
+            instance.__logger.debug(f"Scan result: {asset_file_paths}")
 
-        for path in asset_file_paths:
-            path not in AssetObjectFactory.ASSET_PROPS and self.__logger.warning(
-                f"Asset {path} is not assigned with an key, thus not addressable with asset manager"
-            )
+            for path in asset_file_paths:
+                path not in AssetObjectFactory.ASSET_PROPS and instance.__logger.warning(
+                    f"Asset {path} is not assigned with an key, thus not addressable with asset manager"
+                )
+
+        if cls.__instance is None:
+            cls.__instance = super(AssetObjectFactory, cls).__new__(cls)
+            init(cls.__instance)
+
+        return cls.__instance
 
     def new_asset_object(self, asset_key: str) -> typing.Any:
         self.__logger.debug(f"Creating asset object with asset key {asset_key}")

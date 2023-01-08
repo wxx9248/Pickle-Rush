@@ -3,6 +3,7 @@ import typing
 
 import pygame
 
+from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
 from core.object_model.Sprite import Sprite
 
@@ -10,8 +11,8 @@ AnchorType: typing.TypeAlias = typing.Tuple[float, typing.Callable]
 
 
 class MenuSelectorAtlas(Atlas):
-    def __init__(self, cursor_sprite: Sprite):
-        super().__init__(cursor_sprite)
+    def __init__(self):
+        super().__init__(AssetObjectFactory().new_asset_object("asset.text.menu.cursor"))
         self.__anchors: typing.List[AnchorType] = []
         self.__current_anchor_index = -1
 

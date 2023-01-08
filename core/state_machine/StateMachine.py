@@ -4,10 +4,11 @@ from __future__ import annotations
 import typing
 
 from core.state_machine.NoNextStateException import NoNextStateException
+from core.state_machine.State import State
 
 if typing.TYPE_CHECKING:
     from core.state_machine.TransitionGroup import TransitionGroup
-    from core.state_machine.State import State
+
 
 ExciterType: typing.TypeAlias = typing.Any
 
@@ -78,6 +79,9 @@ class StateMachine:
             return False
         return self.__current_state == self.end_state
 
+    def add_state(self, state: State):
+        self.__state_dict[state.identifier] = state
+
     def remove_state(self, state: State | str):
         if type(state) is not State:
             state = self.__state_dict[state]
@@ -99,10 +103,10 @@ class StateMachine:
         if self.__end_state == state:
             self.__end_state = None
 
-    def register_transition_group(self, source_state: State | str, transition: TransitionGroup):
+    def add_transition_group(self, source_state: State | str, transition_group: TransitionGroup):
         if type(source_state) is not State:
             source_state = self.__state_dict[source_state]
-        self.__transition_group_dict[source_state.identifier] = transition
+        self.__transition_group_dict[source_state.identifier] = transition_group
 
     def remove_transition_group(self, source_state: State | str):
         if type(source_state) is not State:
@@ -112,20 +116,25 @@ class StateMachine:
 
     def reset(self, reset_state=False):
         self.__current_state = self.__start_state
+        self.__current_state.before_entry()
         if reset_state:
             [state.reset() for state in self.__state_dict.values()]
 
-    def next(self, exciter: ExciterType):
+    def next(self, exciter: ExciterType) -> bool:
         if self.halted:
-            return
+            return False
 
         next_state_list = \
             self.__transition_group_dict[self.__current_state.identifier].get_possible_destinations(exciter)
-
         if len(next_state_list) == 0:
-            raise NoNextStateException(self, self.__transition_group_dict[self.__current_state.identifier])
+            # raise NoNextStateException(self, self.__transition_group_dict[self.__current_state.identifier])
+            return False
 
+        self.__current_state.before_leave()
         self.__current_state = self.resolve_next_state_list(next_state_list)
+        self.__current_state.volatile_store.clear()
+        self.__current_state.before_entry()
+        return True
 
     def resolve_next_state_list(self, next_state_list: typing.List[State]) -> State:
         if len(next_state_list) > 1:
@@ -138,8 +147,7 @@ class StateMachine:
         self.__current_state.update()
 
     def __getitem__(self, key: str):
-        item = self.__state_dict[key]
-        return item
+        return self.__state_dict[key]
 
     def __repr__(self):
         return repr(self.__state_dict)
