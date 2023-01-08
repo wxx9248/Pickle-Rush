@@ -3,7 +3,6 @@ import typing
 
 import pygame.mixer
 
-from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
 from core.object_model.LayerManager import LayerManager
 from core.object_model.Sound import Sound
@@ -11,9 +10,8 @@ from core.object_model.Sprite import Sprite
 
 
 class Scene:
-    def __init__(self, size: typing.Tuple[int, int], asset_object_factory: AssetObjectFactory):
+    def __init__(self, size: typing.Tuple[int, int]):
         self.__size = size
-        self.__asset_object_factory = asset_object_factory
 
         default_background_surface = pygame.surface.Surface(size)
         default_background_surface.fill(pygame.Color("black"))
@@ -30,10 +28,6 @@ class Scene:
     @property
     def size(self):
         return self.__size
-
-    @property
-    def asset_object_factory(self):
-        return self.__asset_object_factory
 
     @property
     def layer_manager(self):

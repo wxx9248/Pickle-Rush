@@ -9,7 +9,7 @@ from core.object_model.Sprite import Sprite
 
 
 class Atlas:
-    def __init__(self, default_sprite: typing.Optional[Sprite] = None):
+    def __init__(self, default_sprite: typing.Optional[Sprite] = None, **kwargs):
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
         self.__cached_sprite_surfaces: typing.Dict[str, pygame.surface.Surface] = {}
         self.__current_sprite_key: typing.Optional[str] = None
@@ -23,6 +23,9 @@ class Atlas:
         if default_sprite is not None:
             self["default"] = default_sprite
             self.current_sprite_key = "default"
+
+        for key, sprite in kwargs.items():
+            self[key] = sprite
 
     @property
     def position(self) -> typing.Tuple[float, float]:
@@ -147,10 +150,6 @@ class Atlas:
     @current_sprite_key.setter
     def current_sprite_key(self, value: typing.Optional[str]):
         self.__current_sprite_key = value
-        if self.__current_sprite_key is None:
-            self.__current_sprite_surface = None
-            return
-        self.__current_sprite_surface = self.__cached_sprite_surfaces[self.__current_sprite_key]
 
     def update_surface_cache_scale(self, key: typing.Optional[str] = None):
         iterable = self.__sprite_dict
@@ -176,12 +175,12 @@ class Atlas:
         self.update_surface_cache_opacity(key)
 
     def render(self, surface: pygame.surface.Surface):
-        if self.__current_sprite_surface is None:
+        if self.__current_sprite_key is None:
             return
         self.__speed += self.__acceleration
         self.__position += self.__speed
 
-        surface.blit(self.__current_sprite_surface, self.position_int)
+        surface.blit(self.__cached_sprite_surfaces[self.__current_sprite_key], self.position_int)
 
     def update(self):
         pass
