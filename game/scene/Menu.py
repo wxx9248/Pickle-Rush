@@ -10,7 +10,7 @@ from core.object_model.Scene import Scene
 from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
-from game.scene.Test import Test
+from game.scene.PickleWalking import Test
 from util import util
 
 
