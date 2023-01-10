@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
@@ -18,6 +17,8 @@ class IdleState(State):
 
 
 class WalkState(State):
+    WALK_SPEED = 3
+
     def before_entry(self):
         self.volatile_store["counter"] = 0
 
@@ -41,7 +42,7 @@ class WalkUpState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_y = -1
+        self.persistent_store["atlas"].speed_y = -WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_y = 0
@@ -53,7 +54,7 @@ class WalkDownState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_y = 1
+        self.persistent_store["atlas"].speed_y = WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_y = 0
@@ -65,7 +66,7 @@ class WalkLeftState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_x = -1
+        self.persistent_store["atlas"].speed_x = -WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -77,7 +78,7 @@ class WalkRightState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_x = 1
+        self.persistent_store["atlas"].speed_x = WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -97,8 +98,6 @@ class PickleAtlas(Atlas):
         self.__state_machine.add_state(WalkDownState(atlas=self))
         self.__state_machine.add_state(WalkLeftState(atlas=self))
         self.__state_machine.add_state(WalkRightState(atlas=self))
-        self.__state_machine.start_state = "idle"
-        self.__state_machine.reset()
         self.__state_machine.add_transition_group(
             "idle",
             TransitionGroup(
@@ -127,9 +126,36 @@ class PickleAtlas(Atlas):
             TransitionGroup(
                 (self.__state_machine["idle"], lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT)
             ))
+        self.__state_machine.start_state = "idle"
+        self.__state_machine.reset()
 
     def update(self):
         self.__state_machine.update()
 
-    def accept_input_event(self, event: pygame.event.Event):
+    def accept_event(self, event: pygame.event.Event):
         self.__state_machine.next(event)
+
+# class PickleAtlas(Atlas):
+#     def get_grid_pos(self) -> Tuple[int,int]:
+#         return self.__map_obj.to_grid_position(pygame.Vector2(self.position))
+#
+#     def check_if_win(self) -> bool:
+#         return self.__map_obj.map_wall_atlas_dict[self.grid_pos].tile_type == "2"
+#
+#     def check_collide_with_wall(self) -> bool:
+#         for pos, tile_atlas in self.__map_obj.map_wall_atlas_dict.items():
+#             if tile_atlas.tile_type == TileType.WALL and self.rect.colliderect(tile_atlas.rect):
+#                 return True
+#         return False
+#
+#     def update(self) -> None:
+#         self.update_position()
+#         if self.check_if_win():
+#             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
+#             event.scene = GameWin(self.__scene.size, self.__scene.asset_object_factory)
+#             pygame.event.post(event)
+#
+#     def update_position(self) -> None:
+#         self.rect.x = self.position_x
+#         self.rect.y = self.position_y
+#         self.grid_pos = self.get_grid_pos()

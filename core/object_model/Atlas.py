@@ -12,6 +12,7 @@ class Atlas:
     def __init__(self, default_sprite: typing.Optional[Sprite] = None, **kwargs):
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
         self.__cached_sprite_surfaces: typing.Dict[str, pygame.surface.Surface] = {}
+        self.__cached_sprite_masks: typing.Dict[str, pygame.mask.Mask] = {}
         self.__current_sprite_key: typing.Optional[str] = None
 
         self.__position = pygame.Vector2(0, 0)
@@ -161,18 +162,33 @@ class Atlas:
                 sprite.surface,
                 (self.__scale.x * sprite.surface.get_width(), self.__scale.y * sprite.surface.get_height())
             )
+            self.__cached_sprite_masks[key] = pygame.mask.from_surface(self.__cached_sprite_surfaces[key])
 
     def update_surface_cache_opacity(self, key: typing.Optional[str] = None):
         iterable = self.__cached_sprite_surfaces.values()
         if key is not None:
             iterable = [self.__cached_sprite_surfaces[key]]
 
-        for sprite in iterable:
-            sprite.set_alpha(self.__opacity)
+        for surface in iterable:
+            surface.set_alpha(self.__opacity)
 
     def update_surface_cache(self, key: typing.Optional[str] = None):
         self.update_surface_cache_scale(key)
         self.update_surface_cache_opacity(key)
+
+    def collides_atlas(self, other: Atlas) -> typing.Optional[typing.Tuple[int, int]]:
+        # noinspection PyTypeChecker
+        return self.__cached_sprite_masks[self.__current_sprite_key].overlap(
+            other.__cached_sprite_masks[other.__current_sprite_key],
+            other.__position - self.__position
+        )
+
+    def collides_mask(self, mask: pygame.mask.Mask, offset: pygame.Vector2) -> typing.Optional[typing.Tuple[int, int]]:
+        # noinspection PyTypeChecker
+        return self.__cached_sprite_masks[self.__current_sprite_key].overlap(
+            mask,
+            offset
+        )
 
     def render(self, surface: pygame.surface.Surface):
         if self.__current_sprite_key is None:
@@ -185,7 +201,7 @@ class Atlas:
     def update(self):
         pass
 
-    def accept_input_event(self, event: pygame.event.Event):
+    def accept_event(self, event: pygame.event.Event):
         pass
 
     def __setitem__(self, key: str, item: Sprite):

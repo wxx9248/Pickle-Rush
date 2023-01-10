@@ -23,4 +23,4 @@ class Layer:
 
     def accept_input_event(self, event: pygame.event.Event):
         for atlas in self.__atlases:
-            atlas.accept_input_event(event)
+            atlas.accept_event(event)

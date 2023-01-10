@@ -14,6 +14,8 @@ class CustomEventTypes:
     EVENT_CONFIG_DICT_UPDATED: int = None
     EVENT_CONFIG_FILE_UPDATED: int = None
     EVENT_STAGE_CHANGE_SCENE_REQUEST: int = None
+    EVENT_GAME_WIN: int = None
+    EVENT_GAME_LOST: int = None
 
 
 # Executed when first imported

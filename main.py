@@ -25,7 +25,8 @@ def stop(logger: logging.Logger):
 
 def main():
     # Logger setup
-    logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s][%(levelname)s][%(name)s] %(message)s")
+    logging.basicConfig(level=logging.DEBUG,
+                        format="[%(asctime)s][%(levelname)s][%(name)s] %(message)s")
     logger = logging.getLogger()
 
     logger.debug("Initializing pygame")
@@ -55,9 +56,12 @@ def main():
     event_dispatcher = EventDispatcher()
     event_dispatcher.register(pygame.QUIT, "root", EventHandler("quit", lambda _: stop(logger)))
     event_dispatcher.register(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST, "root",
-                              EventHandler("change-scene-request", lambda e: stage.set_scene(e.scene)))
-    event_dispatcher.register(pygame.KEYDOWN, "root", EventHandler("key-down", lambda e: stage.accept_input_event(e)))
-    event_dispatcher.register(pygame.KEYUP, "root", EventHandler("key-up", lambda e: stage.accept_input_event(e)))
+                              EventHandler("change-scene-request",
+                                           lambda e: stage.set_scene(e.scene)))
+    event_dispatcher.register(pygame.KEYDOWN, "root",
+                              EventHandler("key-down", lambda e: stage.accept_input_event(e)))
+    event_dispatcher.register(pygame.KEYUP, "root",
+                              EventHandler("key-up", lambda e: stage.accept_input_event(e)))
 
     logger.debug("Creating subsystem thread instances")
     config_monitor_thread = ConfigMonitorThread(event_dispatcher, config_manager)
@@ -72,7 +76,6 @@ def main():
         thread.start()
 
     clock = pygame.time.Clock()
-
     while _running:
         event_dispatcher.dispatch_all(pygame.event.get())
         stage.scene.update()
