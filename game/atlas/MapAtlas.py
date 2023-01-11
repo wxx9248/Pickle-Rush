@@ -7,6 +7,7 @@ from core.object_model.Atlas import Atlas
 from core.object_model.Map import Map
 from core.object_model.Sprite import Sprite
 from game.sprite.TileSprite import TileSprite
+from util import util
 
 
 class MapAtlas(Atlas):
@@ -23,9 +24,9 @@ class MapAtlas(Atlas):
         surface = pygame.surface.Surface(
             (self.__tile_size * map_object.tile_count[0], self.__tile_size * map_object.tile_count[1])).convert_alpha()
 
-        [surface.blit(self.__tile_sprite_dict[tile_type].surface, (i * self.__tile_size, j * self.__tile_size))
-         for j, row in enumerate(self.__map_object.tile_types)
-         for i, tile_type in enumerate(row)]
+        [surface.blit(self.__tile_sprite_dict[tile_type].surface, (j * self.__tile_size, i * self.__tile_size))
+         for i, row in enumerate(self.__map_object.tile_types)
+         for j, tile_type in enumerate(row)]
 
         super().__init__(Sprite(surface))
 
@@ -37,18 +38,22 @@ class MapAtlas(Atlas):
         tile_mask_surface.fill(pygame.color.Color("black"))
 
         mask_surface.fill(pygame.color.Color("white"))
-        [mask_surface.blit(tile_mask_surface, (i * self.__tile_size, j * self.__tile_size))
-         for j, row in enumerate(self.__map_object.tile_types)
-         for i, tile_type in enumerate(row)
+        [mask_surface.blit(tile_mask_surface, (j * self.__tile_size, i * self.__tile_size))
+         for i, row in enumerate(self.__map_object.tile_types)
+         for j, tile_type in enumerate(row)
          if tile_type == Map.TileType.WALL]
         self.__wall_mask = pygame.mask.from_surface(mask_surface)
 
         mask_surface.fill(pygame.color.Color("white"))
-        [mask_surface.blit(tile_mask_surface, (i * self.__tile_size, j * self.__tile_size))
-         for j, row in enumerate(self.__map_object.tile_types)
-         for i, tile_type in enumerate(row)
+        [mask_surface.blit(tile_mask_surface, (j * self.__tile_size, i * self.__tile_size))
+         for i, row in enumerate(self.__map_object.tile_types)
+         for j, tile_type in enumerate(row)
          if tile_type == Map.TileType.EXIT]
         self.__exit_mask = pygame.mask.from_surface(mask_surface)
+
+    @property
+    def map_object(self):
+        return self.__map_object
 
     @property
     def wall_mask(self):
@@ -58,7 +63,22 @@ class MapAtlas(Atlas):
     def exit_mask(self):
         return self.__exit_mask
 
-    def to_screen_position(self, grid_position: pygame.Vector2) -> pygame.Vector2:
+    def grid_to_screen_position(self, grid_position: pygame.Vector2,
+                                element_size: typing.Optional[typing.Tuple[int, int]]) -> pygame.Vector2:
         position = grid_position * self.__tile_size
         position = pygame.Vector2(position.x * self.scale_x, position.y * self.scale_y)
-        return position + pygame.Vector2(self.position)
+        if element_size:
+            position += pygame.Vector2(util.center((self.__tile_size, self.__tile_size), element_size))
+        position = pygame.Vector2(position.y, position.x)
+        position += pygame.Vector2(self.position)
+        return position
+
+    def screen_to_grid_position(self, screen_position: pygame.Vector2,
+                                element_size: typing.Optional[typing.Tuple[int, int]]) -> pygame.Vector2:
+        position = screen_position - pygame.Vector2(self.position)
+        position = pygame.Vector2(position.y, position.x)
+        position = pygame.Vector2(position.x / self.scale_x, position.y / self.scale_y)
+        if element_size:
+            position -= pygame.Vector2(util.center((self.__tile_size, self.__tile_size), element_size))
+        position /= self.__tile_size
+        return position

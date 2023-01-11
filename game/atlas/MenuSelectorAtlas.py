@@ -27,6 +27,7 @@ class MenuSelectorAtlas(Atlas):
         super().render(surface)
 
     def update(self):
+        super().update()
         if self.__current_anchor_index < 0:
             return
         self.position_y = self.__anchors[self.__current_anchor_index][0]

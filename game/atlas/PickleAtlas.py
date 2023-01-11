@@ -129,33 +129,13 @@ class PickleAtlas(Atlas):
         self.__state_machine.start_state = "idle"
         self.__state_machine.reset()
 
+    @property
+    def state_machine(self):
+        return self.__state_machine
+
     def update(self):
+        super().update()
         self.__state_machine.update()
 
     def accept_event(self, event: pygame.event.Event):
         self.__state_machine.next(event)
-
-# class PickleAtlas(Atlas):
-#     def get_grid_pos(self) -> Tuple[int,int]:
-#         return self.__map_obj.to_grid_position(pygame.Vector2(self.position))
-#
-#     def check_if_win(self) -> bool:
-#         return self.__map_obj.map_wall_atlas_dict[self.grid_pos].tile_type == "2"
-#
-#     def check_collide_with_wall(self) -> bool:
-#         for pos, tile_atlas in self.__map_obj.map_wall_atlas_dict.items():
-#             if tile_atlas.tile_type == TileType.WALL and self.rect.colliderect(tile_atlas.rect):
-#                 return True
-#         return False
-#
-#     def update(self) -> None:
-#         self.update_position()
-#         if self.check_if_win():
-#             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-#             event.scene = GameWin(self.__scene.size, self.__scene.asset_object_factory)
-#             pygame.event.post(event)
-#
-#     def update_position(self) -> None:
-#         self.rect.x = self.position_x
-#         self.rect.y = self.position_y
-#         self.grid_pos = self.get_grid_pos()

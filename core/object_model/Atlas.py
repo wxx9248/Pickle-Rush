@@ -29,6 +29,10 @@ class Atlas:
             self[key] = sprite
 
     @property
+    def surface(self) -> pygame.surface.Surface:
+        return self.__cached_sprite_surfaces[self.__current_sprite_key]
+
+    @property
     def position(self) -> typing.Tuple[float, float]:
         return self.__position.x, self.__position.y
 
@@ -193,13 +197,11 @@ class Atlas:
     def render(self, surface: pygame.surface.Surface):
         if self.__current_sprite_key is None:
             return
-        self.__speed += self.__acceleration
-        self.__position += self.__speed
-
         surface.blit(self.__cached_sprite_surfaces[self.__current_sprite_key], self.position_int)
 
     def update(self):
-        pass
+        self.__speed += self.__acceleration
+        self.__position += self.__speed
 
     def accept_event(self, event: pygame.event.Event):
         pass

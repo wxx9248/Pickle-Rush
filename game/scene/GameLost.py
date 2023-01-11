@@ -14,11 +14,11 @@ from util import util
 
 
 class GameLost(Scene):
-    def __init__(self, size: typing.Tuple[int, int], asset_object_factory: AssetObjectFactory):
-        super().__init__(size, asset_object_factory)
+    def __init__(self, size: typing.Tuple[int, int]):
+        super().__init__(size)
 
         # Initialize sprites
-        text_sprite: Text = asset_object_factory.new_asset_object("asset.text.gamelost.text")
+        text_sprite: Text = AssetObjectFactory().new_asset_object("asset.text.gamelost.text")
         text_atlas = Atlas(text_sprite)
         text_atlas.position_x = util.center(self.size, text_sprite.surface.get_size())[0]
         text_atlas.position_y = 150
