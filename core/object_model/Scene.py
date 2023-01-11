@@ -16,8 +16,8 @@ class Scene:
         default_background_surface = pygame.surface.Surface(size)
         default_background_surface.fill(pygame.Color("black"))
         self.__background: Atlas = Atlas()
-        self.__background["default-background"] = Sprite(default_background_surface)
-        self.__background.current_sprite_key = "default-background"
+        self.__background["background"] = Sprite(default_background_surface)
+        self.__background.current_sprite_key = "background"
 
         self.__background_music: typing.Optional[Sound] = None
 

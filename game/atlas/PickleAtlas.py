@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
@@ -18,6 +17,8 @@ class IdleState(State):
 
 
 class WalkState(State):
+    WALK_SPEED = 3
+
     def before_entry(self):
         self.volatile_store["counter"] = 0
 
@@ -41,7 +42,7 @@ class WalkUpState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_y = -1
+        self.persistent_store["atlas"].speed_y = -WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_y = 0
@@ -53,7 +54,7 @@ class WalkDownState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_y = 1
+        self.persistent_store["atlas"].speed_y = WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_y = 0
@@ -65,7 +66,7 @@ class WalkLeftState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_x = -1
+        self.persistent_store["atlas"].speed_x = -WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -77,7 +78,7 @@ class WalkRightState(WalkState):
 
     def before_entry(self):
         super().before_entry()
-        self.persistent_store["atlas"].speed_x = 1
+        self.persistent_store["atlas"].speed_x = WalkState.WALK_SPEED
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -97,8 +98,6 @@ class PickleAtlas(Atlas):
         self.__state_machine.add_state(WalkDownState(atlas=self))
         self.__state_machine.add_state(WalkLeftState(atlas=self))
         self.__state_machine.add_state(WalkRightState(atlas=self))
-        self.__state_machine.start_state = "idle"
-        self.__state_machine.reset()
         self.__state_machine.add_transition_group(
             "idle",
             TransitionGroup(
@@ -127,9 +126,16 @@ class PickleAtlas(Atlas):
             TransitionGroup(
                 (self.__state_machine["idle"], lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT)
             ))
+        self.__state_machine.start_state = "idle"
+        self.__state_machine.reset()
+
+    @property
+    def state_machine(self):
+        return self.__state_machine
 
     def update(self):
+        super().update()
         self.__state_machine.update()
 
-    def accept_input_event(self, event: pygame.event.Event):
+    def accept_event(self, event: pygame.event.Event):
         self.__state_machine.next(event)

@@ -27,11 +27,12 @@ class MenuSelectorAtlas(Atlas):
         super().render(surface)
 
     def update(self):
+        super().update()
         if self.__current_anchor_index < 0:
             return
         self.position_y = self.__anchors[self.__current_anchor_index][0]
 
-    def accept_input_event(self, event: pygame.event.Event):
+    def accept_event(self, event: pygame.event.Event):
         if self.__current_anchor_index < 0:
             return
 

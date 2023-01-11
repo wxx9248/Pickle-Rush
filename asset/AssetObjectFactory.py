@@ -8,6 +8,7 @@ import pygame.image
 from core.object_model.Sound import Sound
 from core.object_model.Sprite import Sprite
 from core.object_model.Text import Text
+from core.object_model.Map import Map
 
 
 class AssetObjectFactory:
@@ -21,7 +22,10 @@ class AssetObjectFactory:
         "asset/texts/menu-logo.json": {"key": "asset.text.menu.logo"},
         "asset/texts/menu-start.json": {"key": "asset.text.menu.start"},
         "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"},
-        "asset/texts/menu-cursor.json": {"key": "asset.text.menu.cursor"}
+        "asset/texts/menu-cursor.json": {"key": "asset.text.menu.cursor"},
+        "asset/texts/gamelost-text.json": {"key": "asset.text.gamelost.text"},
+        "asset/texts/gamewin-text.json": {"key": "asset.text.gamewin.text"},
+        "asset/maps/level-0.csv": {"key": "asset.map.level.0"}
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
@@ -52,7 +56,7 @@ class AssetObjectFactory:
 
         return cls.__instance
 
-    def new_asset_object(self, asset_key: str) -> typing.Any:
+    def new_asset_object(self, asset_key: str, *args, **kwargs) -> typing.Any:
         self.__logger.debug(f"Creating asset object with asset key {asset_key}")
         fields = asset_key.split('.')
         namespace = fields[0]
@@ -64,13 +68,17 @@ class AssetObjectFactory:
 
         if asset_type == "sprite":
             self.__logger.debug("Creating a sprite object")
-            return Sprite(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_key]))
+            return Sprite(pygame.image.load(AssetObjectFactory.__asset_id_path_dict[asset_key]), *args, **kwargs)
         if asset_type == "sound":
             self.__logger.debug("Creating a sound object")
-            return Sound(AssetObjectFactory.__asset_id_path_dict[asset_key])
+            return Sound(AssetObjectFactory.__asset_id_path_dict[asset_key], *args, **kwargs)
         if asset_type == "text":
             self.__logger.debug("Creating a text object")
-            return Text(AssetObjectFactory.__asset_id_path_dict[asset_key])
+            return Text(AssetObjectFactory.__asset_id_path_dict[asset_key], *args, **kwargs)
+        if asset_type == "map":
+            self.__logger.debug("Creating a map object")
+            return Map(AssetObjectFactory.__asset_id_path_dict[asset_key], *args, **kwargs)
 
         self.__logger.debug(f"Unknown asset type {asset_type}. Object not created")
         return
+

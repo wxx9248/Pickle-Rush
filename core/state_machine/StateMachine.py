@@ -3,12 +3,10 @@ from __future__ import annotations
 
 import typing
 
-from core.state_machine.NoNextStateException import NoNextStateException
 from core.state_machine.State import State
 
 if typing.TYPE_CHECKING:
     from core.state_machine.TransitionGroup import TransitionGroup
-
 
 ExciterType: typing.TypeAlias = typing.Any
 
@@ -53,6 +51,9 @@ class StateMachine:
             self.__current_state = self.__state_dict[value]
             return
 
+        # Clear volatile storage if necessary: since we are leaving the original state
+        if self.__current_state:
+            self.__current_state.volatile_store.clear()
         self.__current_state = value
         if value.identifier not in self.__state_dict:
             self.__state_dict[value.identifier] = value
@@ -115,8 +116,8 @@ class StateMachine:
         del self.__transition_group_dict[source_state.identifier]
 
     def reset(self, reset_state=False):
-        self.__current_state = self.__start_state
-        self.__current_state.before_entry()
+        self.current_state = self.__start_state
+        self.current_state.before_entry()
         if reset_state:
             [state.reset() for state in self.__state_dict.values()]
 

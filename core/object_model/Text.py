@@ -8,7 +8,7 @@ from util import util
 
 
 class Text(Sprite):
-    def __init__(self, definition_file_path: str, *groups: pygame.sprite.AbstractGroup):
+    def __init__(self, definition_file_path: str, *args, **kwargs):
         definition = json.load(open(definition_file_path))
         self.__wrap = definition["wrap"]
         self.__font = definition["font"]
@@ -20,13 +20,13 @@ class Text(Sprite):
         self.__content = definition["content"]
 
         if self.__wrap is None:
-            super().__init__(self.freeform_renderer().convert_alpha(), *groups)
+            super().__init__(self.freeform_renderer().convert_alpha(), *args, **kwargs)
             return
 
         if self.__wrap == "word":
             self.__box_size_width = definition["boxSize"]["width"]
             self.__box_size_height = definition["boxSize"]["height"]
-            super().__init__(self.word_wrapped_renderer().convert_alpha(), *groups)
+            super().__init__(self.word_wrapped_renderer().convert_alpha(), *args, **kwargs)
             return
 
         raise NotImplementedError(f"Unsupported wrapping method {self.__wrap}")
