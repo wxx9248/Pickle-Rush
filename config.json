@@ -1,5 +1,6 @@
 {
   "debug": true,
+  "show_collide_body": false,
   "game": {},
   "audio": {
     "backgroundMusicLevel": 100,

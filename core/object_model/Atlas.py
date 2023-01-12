@@ -10,6 +10,9 @@ from core.object_model.Sprite import Sprite
 
 class Atlas:
     def __init__(self, default_sprite: typing.Optional[Sprite] = None, **kwargs):
+        self.__RECT_MASK: bool = False
+        self.__SHOW_COLLIDE_BODY: bool = False
+
         self.__sprite_dict: typing.Dict[str, Sprite] = {}
         self.__cached_sprite_surfaces: typing.Dict[str, pygame.surface.Surface] = {}
         self.__cached_sprite_masks: typing.Dict[str, pygame.mask.Mask] = {}
@@ -27,6 +30,26 @@ class Atlas:
 
         for key, sprite in kwargs.items():
             self[key] = sprite
+
+    @property
+    def SHOW_COLLIDE_BODY(self):
+        return self.__SHOW_COLLIDE_BODY
+
+    @SHOW_COLLIDE_BODY.setter
+    def SHOW_COLLIDE_BODY(self, value: bool):
+        self.__SHOW_COLLIDE_BODY = value
+
+    @property
+    def RECT_MASK(self):
+        return self.__RECT_MASK
+
+    @RECT_MASK.setter
+    def RECT_MASK(self, value):
+        self.__RECT_MASK = value
+
+    @property
+    def mask(self):
+        return self.__cached_sprite_masks[self.__current_sprite_key]
 
     @property
     def surface(self) -> pygame.surface.Surface:
@@ -164,9 +187,15 @@ class Atlas:
         for key, sprite in iterable.items():
             self.__cached_sprite_surfaces[key] = pygame.transform.scale(
                 sprite.surface,
-                (self.__scale.x * sprite.surface.get_width(), self.__scale.y * sprite.surface.get_height())
+                (self.__scale.x * sprite.surface.get_width(),
+                 self.__scale.y * sprite.surface.get_height())
             )
-            self.__cached_sprite_masks[key] = pygame.mask.from_surface(self.__cached_sprite_surfaces[key])
+            if self.__RECT_MASK:
+                self.__cached_sprite_masks[key] = pygame.mask.from_surface(
+                    self.__cached_sprite_surfaces[key])
+            else:
+                self.__cached_sprite_masks[key] = pygame.mask.Mask(
+                    self.__cached_sprite_surfaces[key].get_size(), True)
 
     def update_surface_cache_opacity(self, key: typing.Optional[str] = None):
         iterable = self.__cached_sprite_surfaces.values()
@@ -187,7 +216,8 @@ class Atlas:
             other.__position - self.__position
         )
 
-    def collides_mask(self, mask: pygame.mask.Mask, offset: pygame.Vector2) -> typing.Optional[typing.Tuple[int, int]]:
+    def collides_mask(self, mask: pygame.mask.Mask, offset: pygame.Vector2) -> typing.Optional[
+        typing.Tuple[int, int]]:
         # noinspection PyTypeChecker
         return self.__cached_sprite_masks[self.__current_sprite_key].overlap(
             mask,
@@ -198,6 +228,12 @@ class Atlas:
         if self.__current_sprite_key is None:
             return
         surface.blit(self.__cached_sprite_surfaces[self.__current_sprite_key], self.position_int)
+
+        # for debug use
+        if self.SHOW_COLLIDE_BODY:
+            outline = self.mask.outline()
+            outline = [(t[0] + self.position_x, t[1] + self.position_y) for t in outline]
+            pygame.draw.lines(surface, (0, 0, 255), True, outline, 3)
 
     def update(self):
         self.__speed += self.__acceleration

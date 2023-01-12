@@ -11,6 +11,7 @@ from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
 from game.scene.Level0 import Level0
+from game.scene.Level1 import Level1
 from util import util
 
 
@@ -48,5 +49,8 @@ class Menu(Scene):
 
     def start_game_handler(self):
         event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-        event.scene = Level0(self.size)
+        # event.scene = Level0(self.size)
+
+        # shortcut for test
+        event.scene = Level1(self.size)
         pygame.event.post(event)

@@ -25,7 +25,8 @@ class AssetObjectFactory:
         "asset/texts/menu-cursor.json": {"key": "asset.text.menu.cursor"},
         "asset/texts/gamelost-text.json": {"key": "asset.text.gamelost.text"},
         "asset/texts/gamewin-text.json": {"key": "asset.text.gamewin.text"},
-        "asset/maps/level-0.csv": {"key": "asset.map.level.0"}
+        "asset/maps/level-0.csv": {"key": "asset.map.level.0"},
+        "asset/maps/level-1.csv": {"key": "asset.map.level.1"},
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
