@@ -10,6 +10,7 @@ class Map:
         SPACE = 0
         WALL = 1
         EXIT = 2
+        DEAD = 3
 
     def __init__(self, map_file: typing.Optional[str], *args, **kwargs):
         self.__tile_count: typing.List[int] = [0, 0]

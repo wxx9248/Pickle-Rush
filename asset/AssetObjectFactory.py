@@ -5,10 +5,10 @@ import typing
 
 import pygame.image
 
+from core.object_model.Map import Map
 from core.object_model.Sound import Sound
 from core.object_model.Sprite import Sprite
 from core.object_model.Text import Text
-from core.object_model.Map import Map
 
 
 class AssetObjectFactory:
@@ -23,9 +23,13 @@ class AssetObjectFactory:
         "asset/texts/menu-start.json": {"key": "asset.text.menu.start"},
         "asset/texts/menu-exit.json": {"key": "asset.text.menu.exit"},
         "asset/texts/menu-cursor.json": {"key": "asset.text.menu.cursor"},
-        "asset/texts/gamelost-text.json": {"key": "asset.text.gamelost.text"},
-        "asset/texts/gamewin-text.json": {"key": "asset.text.gamewin.text"},
-        "asset/maps/level-0.csv": {"key": "asset.map.level.0"}
+        "asset/texts/game-lost-text.json": {"key": "asset.text.game-lost"},
+        "asset/texts/game-win-text.json": {"key": "asset.text.game-win"},
+        "asset/texts/retry-text.json": {"key": "asset.text.retry"},
+        "asset/texts/next-level-text.json": {"key": "asset.text.next-level"},
+        "asset/texts/back-to-menu-text.json": {"key": "asset.text.back-to-menu"},
+        "asset/maps/level-0.csv": {"key": "asset.map.level.0"},
+        "asset/maps/level-1.csv": {"key": "asset.map.level.1"},
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}
@@ -81,4 +85,3 @@ class AssetObjectFactory:
 
         self.__logger.debug(f"Unknown asset type {asset_type}. Object not created")
         return
-

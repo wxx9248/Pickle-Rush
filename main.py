@@ -4,9 +4,8 @@ import logging
 
 import pygame
 
-from asset.AssetObjectFactory import AssetObjectFactory
+from config.ConfigManager import ConfigManager
 from config.ConfigMonitorThread import ConfigMonitorThread
-from config.JSONConfigManager import JSONConfigManager
 from core.object_model.Stage import Stage
 from event.CustomEventTypes import CustomEventTypes
 from event.EventDispatcher import EventDispatcher
@@ -33,7 +32,7 @@ def main():
     pygame.init()
 
     logger.debug("Initializing config manager")
-    config_manager = JSONConfigManager("config.json", JSONConfigManager.BindingMode.DOUBLE)
+    config_manager = ConfigManager()
 
     logger.debug("Creating display surface")
     display_surface = pygame.display.set_mode(
@@ -59,9 +58,9 @@ def main():
                               EventHandler("change-scene-request",
                                            lambda e: stage.set_scene(e.scene)))
     event_dispatcher.register(pygame.KEYDOWN, "root",
-                              EventHandler("key-down", lambda e: stage.accept_input_event(e)))
+                              EventHandler("key-down", lambda e: stage.accept_event(e)))
     event_dispatcher.register(pygame.KEYUP, "root",
-                              EventHandler("key-up", lambda e: stage.accept_input_event(e)))
+                              EventHandler("key-up", lambda e: stage.accept_event(e)))
 
     logger.debug("Creating subsystem thread instances")
     config_monitor_thread = ConfigMonitorThread(event_dispatcher, config_manager)

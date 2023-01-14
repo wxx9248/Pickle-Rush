@@ -31,6 +31,8 @@ class MapNavigator:
         self.update_position()
         if self.__source_grid_position == self.__next_grid_position:
             path = self.construct_path(self.search())
+            if len(path) < 1:
+                return
             self.__next_grid_position = path[1]
             self.__direction_vector = pygame.Vector2(
                 int(self.__next_grid_position[1] - self.__source_grid_position[1]),

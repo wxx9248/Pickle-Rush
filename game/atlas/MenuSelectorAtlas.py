@@ -5,7 +5,6 @@ import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
-from core.object_model.Sprite import Sprite
 
 AnchorType: typing.TypeAlias = typing.Tuple[float, typing.Callable]
 
@@ -36,7 +35,7 @@ class MenuSelectorAtlas(Atlas):
         if self.__current_anchor_index < 0:
             return
 
-        if event.key == pygame.K_RETURN:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             self.__anchors[self.__current_anchor_index][1]()
 
         if event.key == pygame.K_UP and self.__current_anchor_index > 0:

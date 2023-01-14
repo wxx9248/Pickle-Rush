@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import typing
 
 import pygame.event
@@ -12,6 +13,7 @@ EventHandlerDictType: typing.TypeAlias = typing.Dict[int, typing.Dict[str, typin
 
 class EventDispatcher:
     def __init__(self):
+        self.__logger = logging.getLogger(self.__class__.__name__)
         self.__event_handler_dict: EventHandlerDictType = {}
         self.__rwlock = RWLockWrite()
 
@@ -37,7 +39,7 @@ class EventDispatcher:
         with self.__rwlock.gen_rlock():
             if event.type not in self.__event_handler_dict:
                 return
-
+            self.__logger.debug(f"Dispatching event: {event}")
             [catch_exception_and_print(lambda: handler.handle(event))
              for handlers in self.__event_handler_dict[event.type].values()
              for handler in handlers]

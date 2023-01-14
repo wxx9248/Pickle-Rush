@@ -13,6 +13,7 @@ from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlas import PickleAtlas
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
+from game.scene.Level1 import Level1
 from util import util
 from util.MapNavigator import MapNavigator
 
@@ -38,16 +39,22 @@ class Level0(Scene):
             pygame.Vector2(10, 10), self.__pickle_atlas.surface.get_size()
         )
 
-        self.__bacteria_atlas = BacteriaAtlas()
-        self.__bacteria_atlas.scale = (0.025, 0.025)
-        self.__bacteria_atlas.position = self.__map_atlas.grid_to_screen_position(
-            pygame.Vector2(1, 1), self.__bacteria_atlas.surface.get_size()
+        entity_layer = Layer(self.__pickle_atlas)
+
+        self.__bacteria_atlas_position = (
+            (BacteriaAtlas(), (1, 1)),
+            (BacteriaAtlas(), (15, 1)),
+            (BacteriaAtlas(), (15, 19)),
+            (BacteriaAtlas(), (1, 21))
         )
 
-        map_navigator = MapNavigator(self.__bacteria_atlas, self.__pickle_atlas, self.__map_atlas)
-        self.__bacteria_atlas.map_navigator = map_navigator
-
-        entity_layer = Layer(self.__pickle_atlas, self.__bacteria_atlas)
+        for (bacteria_atlas, position) in self.__bacteria_atlas_position:
+            bacteria_atlas.scale = (0.025, 0.025)
+            bacteria_atlas.position = self.__map_atlas.grid_to_screen_position(
+                pygame.Vector2(position), bacteria_atlas.surface.get_size()
+            )
+            bacteria_atlas.map_navigator = MapNavigator(bacteria_atlas, self.__pickle_atlas, self.__map_atlas)
+            entity_layer.add_atlas(bacteria_atlas)
 
         self.layer_manager["map"] = map_layer
         self.layer_manager["entity"] = entity_layer
@@ -56,10 +63,11 @@ class Level0(Scene):
         pickle_position = self.__pickle_atlas.position
         super().update()
 
-        collide_bacteria = self.__pickle_atlas.collides_atlas(self.__bacteria_atlas)
+        collide_bacteria = any([self.__pickle_atlas.collides_atlas(bacteria_atlas)
+                                for (bacteria_atlas, _) in self.__bacteria_atlas_position])
         if collide_bacteria:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameLost(self.size)
+            event.scene = GameLost(self.size, self.__class__)
             pygame.event.post(event)
 
         collide_wall = self.__pickle_atlas.collides_mask(
@@ -77,5 +85,5 @@ class Level0(Scene):
         )
         if collide_exit:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameWin(self.size)
+            event.scene = GameWin(self.size, Level1)
             pygame.event.post(event)
