@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import typing
+import math
 
 import pygame
 
@@ -20,6 +20,7 @@ class IdleState(State):
 
 class WalkState(State):
     WALK_SPEED = 3
+    DIAGONAL_WALK_SPEED = math.sqrt(2) / 2 * WALK_SPEED
 
     def before_entry(self):
         self.volatile_store["counter"] = 0
@@ -38,9 +39,9 @@ class WalkState(State):
         self.volatile_store["counter"] += 1
 
 
-class WalkUpState(WalkState):
+class WalkNorthState(WalkState):
     def __init__(self, **kwargs):
-        super().__init__("walk-up", **kwargs)
+        super().__init__("walk-north", **kwargs)
 
     def before_entry(self):
         super().before_entry()
@@ -50,9 +51,9 @@ class WalkUpState(WalkState):
         self.persistent_store["atlas"].speed_y = 0
 
 
-class WalkDownState(WalkState):
+class WalkSouthState(WalkState):
     def __init__(self, **kwargs):
-        super().__init__("walk-down", **kwargs)
+        super().__init__("walk-south", **kwargs)
 
     def before_entry(self):
         super().before_entry()
@@ -62,9 +63,9 @@ class WalkDownState(WalkState):
         self.persistent_store["atlas"].speed_y = 0
 
 
-class WalkLeftState(WalkState):
+class WalkWestState(WalkState):
     def __init__(self, **kwargs):
-        super().__init__("walk-left", **kwargs)
+        super().__init__("walk-west", **kwargs)
 
     def before_entry(self):
         super().before_entry()
@@ -74,9 +75,9 @@ class WalkLeftState(WalkState):
         self.persistent_store["atlas"].speed_x = 0
 
 
-class WalkRightState(WalkState):
+class WalkEastState(WalkState):
     def __init__(self, **kwargs):
-        super().__init__("walk-right", **kwargs)
+        super().__init__("walk-east", **kwargs)
 
     def before_entry(self):
         super().before_entry()
@@ -84,6 +85,62 @@ class WalkRightState(WalkState):
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
+
+
+class WalkNorthWestState(WalkState):
+    def __init__(self, **kwargs):
+        super().__init__("walk-north-west", **kwargs)
+
+    def before_entry(self):
+        super().before_entry()
+        self.persistent_store["atlas"].speed_x = -WalkState.DIAGONAL_WALK_SPEED
+        self.persistent_store["atlas"].speed_y = -WalkState.DIAGONAL_WALK_SPEED
+
+    def before_leave(self):
+        self.persistent_store["atlas"].speed_x = 0
+        self.persistent_store["atlas"].speed_y = 0
+
+
+class WalkNorthEastState(WalkState):
+    def __init__(self, **kwargs):
+        super().__init__("walk-north-east", **kwargs)
+
+    def before_entry(self):
+        super().before_entry()
+        self.persistent_store["atlas"].speed_x = WalkState.DIAGONAL_WALK_SPEED
+        self.persistent_store["atlas"].speed_y = -WalkState.DIAGONAL_WALK_SPEED
+
+    def before_leave(self):
+        self.persistent_store["atlas"].speed_x = 0
+        self.persistent_store["atlas"].speed_y = 0
+
+
+class WalkSouthWestState(WalkState):
+    def __init__(self, **kwargs):
+        super().__init__("walk-south-west", **kwargs)
+
+    def before_entry(self):
+        super().before_entry()
+        self.persistent_store["atlas"].speed_x = -WalkState.DIAGONAL_WALK_SPEED
+        self.persistent_store["atlas"].speed_y = WalkState.DIAGONAL_WALK_SPEED
+
+    def before_leave(self):
+        self.persistent_store["atlas"].speed_x = 0
+        self.persistent_store["atlas"].speed_y = 0
+
+
+class WalkSouthEastState(WalkState):
+    def __init__(self, **kwargs):
+        super().__init__("walk-south-east", **kwargs)
+
+    def before_entry(self):
+        super().before_entry()
+        self.persistent_store["atlas"].speed_x = WalkState.DIAGONAL_WALK_SPEED
+        self.persistent_store["atlas"].speed_y = WalkState.DIAGONAL_WALK_SPEED
+
+    def before_leave(self):
+        self.persistent_store["atlas"].speed_x = 0
+        self.persistent_store["atlas"].speed_y = 0
 
 
 class PickleAtlas(Atlas):
@@ -96,53 +153,105 @@ class PickleAtlas(Atlas):
 
         self.__state_machine = StateMachine()
         self.__state_machine.add_state(IdleState(atlas=self))
-        self.__state_machine.add_state(WalkUpState(atlas=self))
-        self.__state_machine.add_state(WalkDownState(atlas=self))
-        self.__state_machine.add_state(WalkLeftState(atlas=self))
-        self.__state_machine.add_state(WalkRightState(atlas=self))
+        self.__state_machine.add_state(WalkNorthState(atlas=self))
+        self.__state_machine.add_state(WalkSouthState(atlas=self))
+        self.__state_machine.add_state(WalkWestState(atlas=self))
+        self.__state_machine.add_state(WalkEastState(atlas=self))
+        self.__state_machine.add_state(WalkNorthWestState(atlas=self))
+        self.__state_machine.add_state(WalkNorthEastState(atlas=self))
+        self.__state_machine.add_state(WalkSouthWestState(atlas=self))
+        self.__state_machine.add_state(WalkSouthEastState(atlas=self))
         self.__state_machine.add_transition_group(
             "idle",
             TransitionGroup(
-                (self.__state_machine["walk-up"],
+                (self.__state_machine["walk-north"],
                  lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_UP),
-                (self.__state_machine["walk-down"],
+                (self.__state_machine["walk-south"],
                  lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_DOWN),
-                (self.__state_machine["walk-left"],
+                (self.__state_machine["walk-west"],
                  lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT),
-                (self.__state_machine["walk-right"],
+                (self.__state_machine["walk-east"],
                  lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT)
             ))
-
         self.__state_machine.add_transition_group(
-            "walk-up",
+            "walk-north",
             TransitionGroup(
                 (self.__state_machine["idle"],
                  lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_UP),
+                (self.__state_machine["walk-north-west"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT),
+                (self.__state_machine["walk-north-east"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT)
             ))
         self.__state_machine.add_transition_group(
-            "walk-down",
+            "walk-south",
             TransitionGroup(
                 (self.__state_machine["idle"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_DOWN),
+                (self.__state_machine["walk-south-west"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT),
+                (self.__state_machine["walk-south-east"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT)
+            ))
+        self.__state_machine.add_transition_group(
+            "walk-west",
+            TransitionGroup(
+                (self.__state_machine["idle"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_LEFT),
+                (self.__state_machine["walk-north-west"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_UP),
+                (self.__state_machine["walk-south-west"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_DOWN)
+            ))
+        self.__state_machine.add_transition_group(
+            "walk-east",
+            TransitionGroup(
+                (self.__state_machine["idle"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT),
+                (self.__state_machine["walk-north-east"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_UP),
+                (self.__state_machine["walk-south-east"],
+                 lambda _, e: e.type == pygame.KEYDOWN and e.key == pygame.K_DOWN)
+            ))
+
+        self.__state_machine.add_transition_group(
+            "walk-north-west",
+            TransitionGroup(
+                (self.__state_machine["walk-north"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_LEFT),
+                (self.__state_machine["walk-west"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_UP)
+            ))
+
+        self.__state_machine.add_transition_group(
+            "walk-north-east",
+            TransitionGroup(
+                (self.__state_machine["walk-north"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT),
+                (self.__state_machine["walk-east"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_UP)
+            ))
+
+        self.__state_machine.add_transition_group(
+            "walk-south-west",
+            TransitionGroup(
+                (self.__state_machine["walk-south"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_LEFT),
+                (self.__state_machine["walk-west"],
                  lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_DOWN)
             ))
+
         self.__state_machine.add_transition_group(
-            "walk-left",
+            "walk-south-east",
             TransitionGroup(
-                (self.__state_machine["idle"],
-                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_LEFT)
+                (self.__state_machine["walk-south"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT),
+                (self.__state_machine["walk-east"],
+                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_DOWN)
             ))
-        self.__state_machine.add_transition_group(
-            "walk-right",
-            TransitionGroup(
-                (self.__state_machine["idle"],
-                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_RIGHT)
-            ))
+
         self.__state_machine.start_state = "idle"
         self.__state_machine.reset()
-
-    @property
-    def state_machine(self):
-        return self.__state_machine
 
     def update(self):
         super().update()

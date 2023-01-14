@@ -1,27 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import typing
+
 import pygame.surface
+
 from asset.AssetObjectFactory import AssetObjectFactory
-from config.JSONConfigManager import JSONConfigManager
+from config.ConfigManager import ConfigManager
+from core.object_model.Camera import Camera
 from core.object_model.Layer import Layer
 from core.object_model.Scene import Scene
 from core.object_model.Sprite import Sprite
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MapAtlas import MapAtlas
-from game.atlas.PlatformerPickleAtlas import PlatformerPickleAtlas, MotionControlEvents
+from game.atlas.PickleAtlasGravity import PickleAtlasGravity
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
-from util import util
-from core.object_model.Camera import Camera
 
 
 class Level1(Scene):
     def __init__(self, size: typing.Tuple[int, int]):
         super().__init__(size)
 
-        config_manager = JSONConfigManager("config.json", JSONConfigManager.BindingMode.DOUBLE)
-        self.__is_show_collide_body = config_manager.get("config.show_collide_body")
+        config_manager = ConfigManager()
+        self.__is_show_collide_body = config_manager.get("config.debug")
 
         background_surface = pygame.Surface(self.size).convert_alpha()
         background_surface.fill(pygame.Color("white"))
@@ -32,12 +33,11 @@ class Level1(Scene):
         self.__map_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
         map_layer = Layer(self.__map_atlas)
 
-        self.__pickle_atlas = PlatformerPickleAtlas()
+        self.__pickle_atlas = PickleAtlasGravity()
         self.__pickle_atlas.scale = (0.05, 0.05)
         self.__pickle_atlas.position = self.__map_atlas.grid_to_screen_position(
             pygame.Vector2(8, 10), self.__pickle_atlas.surface.get_size()
         )
-        self.__pickle_atlas.acceleration_y = 0.1
         self.__pickle_atlas.RECT_MASK = True
         self.__pickle_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
 
@@ -51,6 +51,7 @@ class Level1(Scene):
     def update(self):
         backup_pos = self.__pickle_atlas.position
         backup_pos_x, backup_pos_y = backup_pos
+
         super().update()
         self.__pickle_atlas.update()
 
@@ -75,7 +76,6 @@ class Level1(Scene):
 
             # colliding floor wall
             if self.__pickle_atlas.speed_y >= 0 and y > (pickle_size_y / 2):
-                self.__pickle_atlas.state_machine.next(pygame.event.Event(MotionControlEvents.EVENT_TOUCH_GROUND))
                 self.__pickle_atlas.speed_y = 0
                 self.__pickle_atlas.position_y = backup_pos_y
 
@@ -83,20 +83,18 @@ class Level1(Scene):
             self.__map_atlas.exit_mask,
             pygame.Vector2(self.__map_atlas.position) - pygame.Vector2(self.__pickle_atlas.position)
         )
-
         if collide_exit:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameWin(self.size)
+            event.scene = GameWin(self.size, None)
             pygame.event.post(event)
 
         collide_dead = self.__pickle_atlas.collides_mask(
             self.__map_atlas.dead_mask,
             pygame.Vector2(self.__map_atlas.position) - pygame.Vector2(self.__pickle_atlas.position)
         )
-
         if collide_dead:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameLost(self.size)
+            event.scene = GameLost(self.size, self.__class__)
             pygame.event.post(event)
 
     def render(self, surface: pygame.surface.Surface):

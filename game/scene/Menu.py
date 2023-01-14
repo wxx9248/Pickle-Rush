@@ -11,7 +11,6 @@ from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
 from game.scene.Level0 import Level0
-from game.scene.Level1 import Level1
 from util import util
 
 
@@ -40,17 +39,17 @@ class Menu(Scene):
         cursor_sprite_atlas = MenuSelectorAtlas()
         cursor_sprite_atlas.position_x = 500
         cursor_sprite_atlas.add_anchor(
-            (start_text_atlas.position_y - 6, lambda: self.start_game_handler()),
+            (start_text_atlas.position_y - 6, lambda: self.start_game()),
             (exit_text_atlas.position_y - 6, lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
         )
 
         layer = Layer(logo_atlas, start_text_atlas, exit_text_atlas, cursor_sprite_atlas)
         self.layer_manager["menu"] = layer
 
-    def start_game_handler(self):
+    def start_game(self):
         event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
         # event.scene = Level0(self.size)
 
         # shortcut for test
-        event.scene = Level1(self.size)
+        event.scene = Level0(self.size)
         pygame.event.post(event)

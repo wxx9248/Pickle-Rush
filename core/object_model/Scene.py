@@ -64,5 +64,5 @@ class Scene:
         self.__background.render(surface)
         self.__layer_manager.render(surface)
 
-    def accept_input_event(self, event: pygame.event.Event):
-        self.layer_manager.accept_input_event(event)
+    def accept_event(self, event: pygame.event.Event):
+        self.layer_manager.accept_event(event)

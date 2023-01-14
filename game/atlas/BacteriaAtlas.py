@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 import typing
-from typing import Optional, Dict
-from typing import Tuple
 
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
 from util.MapNavigator import MapNavigator
-from util.PriorityQueue import PriorityQueue
 
 
 class BacteriaAtlas(Atlas):
@@ -35,4 +32,3 @@ class BacteriaAtlas(Atlas):
 
     def render(self, surface: pygame.surface.Surface) -> None:
         super().render(surface)
-

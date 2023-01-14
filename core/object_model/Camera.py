@@ -1,6 +1,8 @@
-import pygame
-from core.object_model.Atlas import Atlas
 from typing import Tuple
+
+import pygame
+
+from core.object_model.Atlas import Atlas
 
 
 class Camera:
