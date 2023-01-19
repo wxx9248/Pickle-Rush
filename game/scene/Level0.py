@@ -13,7 +13,7 @@ from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlas import PickleAtlas
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
-from game.scene.Level1 import Level1
+from game.scene.Level0Plus import Level0Plus
 from util import util
 from util.MapNavigator import MapNavigator
 
@@ -85,5 +85,5 @@ class Level0(Scene):
         )
         if collide_exit:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameWin(self.size, Level1)
+            event.scene = GameWin(self.size, Level0Plus)
             pygame.event.post(event)

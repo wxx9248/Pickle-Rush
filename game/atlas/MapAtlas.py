@@ -3,6 +3,7 @@ import typing
 
 import pygame.surface
 
+from typing import Dict, Union
 from core.object_model.Atlas import Atlas
 from core.object_model.Map import Map
 from core.object_model.Sprite import Sprite
@@ -11,21 +12,27 @@ from util import util
 
 
 class MapAtlas(Atlas):
-    def __init__(self, map_object: Map, tile_size: int = 40, **kwargs):
+    def __init__(self, map_object: Map, tile_size: int = 40,
+                 texture_setup: Union[Dict[int, Sprite], None] = None, **kwargs):
         self.__map_object = map_object
         self.__tile_sprite_dict: typing.Dict[Map.TileType, Sprite] = {}
 
-        # TODO: Use pictures for tiles instead of TileSprite
         self.__tile_size = tile_size
-        self.__tile_sprite_dict[Map.TileType.SPACE] = TileSprite(Map.TileType.SPACE, self.__tile_size)
-        self.__tile_sprite_dict[Map.TileType.WALL] = TileSprite(Map.TileType.WALL, self.__tile_size)
-        self.__tile_sprite_dict[Map.TileType.EXIT] = TileSprite(Map.TileType.EXIT, self.__tile_size)
-        self.__tile_sprite_dict[Map.TileType.DEAD] = TileSprite(Map.TileType.DEAD, self.__tile_size)
-        self.__tile_sprite_dict[Map.TileType.START] = TileSprite(Map.TileType.START, self.__tile_size)
+
+        if texture_setup:
+            for tile_type in Map.TileType:
+                if tile_type in texture_setup.keys():
+                    self.__tile_sprite_dict[tile_type] = \
+                        TileSprite(tile_type, self.__tile_size, texture_setup[tile_type])
+                else:
+                    self.__tile_sprite_dict[tile_type] = TileSprite(tile_type, self.__tile_size)
+        else:
+            for tile_type in Map.TileType:
+                self.__tile_sprite_dict[tile_type] = TileSprite(tile_type, self.__tile_size)
 
         surface = pygame.surface.Surface(
             (self.__tile_size * map_object.tile_count[1],
-             self.__tile_size * map_object.tile_count[0])).convert_alpha()
+             self.__tile_size * map_object.tile_count[0]), pygame.SRCALPHA).convert_alpha()
 
         [surface.blit(self.__tile_sprite_dict[tile_type].surface,
                       (j * self.__tile_size, i * self.__tile_size))

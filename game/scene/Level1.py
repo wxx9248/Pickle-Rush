@@ -15,6 +15,8 @@ from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlasGravity import PickleAtlasGravity
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
+from core.object_model.Map import Map
+from core.object_model.Atlas import Atlas
 
 
 class Level1(Scene):
@@ -24,11 +26,16 @@ class Level1(Scene):
         config_manager = ConfigManager()
         self.__is_show_collide_body = config_manager.get("config.debug")
 
-        background_surface = pygame.Surface(self.size).convert_alpha()
-        background_surface.fill(pygame.Color("white"))
-        self.background["background"] = Sprite(background_surface)
+        ao = AssetObjectFactory()
+        texture_setup = {
+            Map.TileType.WALL: ao.new_asset_object("asset.sprite.tile.grass"),
+            Map.TileType.DEAD: ao.new_asset_object("asset.sprite.tile.water")
+        }
 
-        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.1"), 60)
+        self.background = Atlas(ao.new_asset_object("asset.sprite.level.1.background"))
+        self.background.scale_to(size)
+
+        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.1"), 60, texture_setup)
         self.__map_atlas.position = (0, 0)
         self.__map_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
         map_layer = Layer(self.__map_atlas)
@@ -41,12 +48,38 @@ class Level1(Scene):
         self.__pickle_atlas.RECT_MASK = True
         self.__pickle_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
 
-        self.__camera = Camera((1280, 720), self.__pickle_atlas)
+        self.__camera = Camera((1280, 720), self.__pickle_atlas,
+                               self.__map_atlas.surface.get_size())
         self.__collide_mask_surface = None
 
         entity_layer = Layer(self.__pickle_atlas)
         self.layer_manager["map"] = map_layer
+        self.layer_manager["scenery"] = self.init_scenery_layer()
         self.layer_manager["entity"] = entity_layer
+
+        self.__scene_canvas = pygame.Surface(self.__map_atlas.surface.get_size(),
+                                             pygame.SRCALPHA).convert_alpha()
+
+    def init_scenery_layer(self):
+        ao = AssetObjectFactory()
+        tower_sp: Sprite = ao.new_asset_object("asset.sprite.tower")
+        tower_sp.image = pygame.transform.scale(tower_sp.surface, (220, 220))
+
+        tree_sp: Sprite = ao.new_asset_object("asset.sprite.tree")
+        tree_sp.image = pygame.transform.scale(tree_sp.surface, (60, 120))
+
+        tower = Atlas(tower_sp)
+        tower.position = self.__map_atlas.grid_to_screen_position(pygame.Vector2(9, 48),
+                                                                  tower.surface.get_size())
+
+        tree1 = Atlas(tree_sp)
+        tree1.position = self.__map_atlas.grid_to_screen_position(pygame.Vector2(9, 10),
+                                                                  tree1.surface.get_size())
+
+        tree2 = Atlas(tree_sp)
+        tree2.position = self.__map_atlas.grid_to_screen_position(pygame.Vector2(9, 21),
+                                                                  tree2.surface.get_size())
+        return Layer(tower, tree1, tree2)
 
     def update(self):
         backup_pos = self.__pickle_atlas.position
@@ -98,13 +131,8 @@ class Level1(Scene):
             pygame.event.post(event)
 
     def render(self, surface: pygame.surface.Surface):
+        surface.blit(self.background.surface, (0, 0))
         render_params = self.__camera.get_render_params()
-
-        scene_canvas = pygame.Surface(self.__map_atlas.surface.get_size())
-        self.layer_manager.render(scene_canvas)
-
-        if self.__collide_mask_surface:
-            scene_canvas.blit(self.__collide_mask_surface, self.__pickle_atlas.position)
-            self.__collide_mask_surface = None
-
-        surface.blit(scene_canvas, (0, 0), render_params)
+        self.__scene_canvas.fill((0, 0, 0, 0))
+        self.layer_manager.render(self.__scene_canvas)
+        surface.blit(self.__scene_canvas, (0, 0), render_params)

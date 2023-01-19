@@ -179,6 +179,11 @@ class Atlas:
     def current_sprite_key(self, value: typing.Optional[str]):
         self.__current_sprite_key = value
 
+    def scale_to(self, size: typing.Tuple[int, int]):
+        (width, height) = size
+        self.scale_x = width / self.surface.get_width()
+        self.scale_y = height / self.surface.get_height()
+
     def update_surface_cache_scale(self, key: typing.Optional[str] = None):
         iterable = self.__sprite_dict
         if key is not None:
