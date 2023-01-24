@@ -6,8 +6,10 @@ import pygame.surface
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from config.ConfigManager import ConfigManager
+from core.object_model.Atlas import Atlas
 from core.object_model.Camera import Camera
 from core.object_model.Layer import Layer
+from core.object_model.Map import Map
 from core.object_model.Scene import Scene
 from core.object_model.Sprite import Sprite
 from event.CustomEventTypes import CustomEventTypes
@@ -15,8 +17,6 @@ from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlasGravity import PickleAtlasGravity
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
-from core.object_model.Map import Map
-from core.object_model.Atlas import Atlas
 
 
 class Level1(Scene):
@@ -59,6 +59,8 @@ class Level1(Scene):
 
         self.__scene_canvas = pygame.Surface(self.__map_atlas.surface.get_size(),
                                              pygame.SRCALPHA).convert_alpha()
+
+        self.__sent_floor_collision_event = False
 
     def init_scenery_layer(self):
         ao = AssetObjectFactory()
@@ -111,6 +113,11 @@ class Level1(Scene):
             if self.__pickle_atlas.speed_y >= 0 and y > (pickle_size_y / 2):
                 self.__pickle_atlas.speed_y = 0
                 self.__pickle_atlas.position_y = backup_pos_y
+                if not self.__sent_floor_collision_event:
+                    self.__pickle_atlas.accept_event(pygame.event.Event(CustomEventTypes.EVENT_LEVEL_1_COLLIDE_FLOOR))
+                    self.__sent_floor_collision_event = True
+        else:
+            self.__sent_floor_collision_event = False
 
         collide_exit = self.__pickle_atlas.collides_mask(
             self.__map_atlas.exit_mask,

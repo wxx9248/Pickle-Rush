@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import typing
+from typing import Dict, Union
 
 import pygame.surface
 
-from typing import Dict, Union
 from core.object_model.Atlas import Atlas
 from core.object_model.Map import Map
 from core.object_model.Sprite import Sprite

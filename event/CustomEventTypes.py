@@ -10,13 +10,14 @@ class CustomEventTypes:
     * Names of all event types must start with `EVENT_`, or the event will not be assigned with a proper event type ID.
     * The initial value of an event type ID can be anything. The value will be overridden after the module is imported.
     """
-    EVENT_TEST: int = None
+    EVENT_DUMMY: int = None
     EVENT_THREAD_EXCEPTION: int = None
     EVENT_CONFIG_DICT_UPDATED: int = None
     EVENT_CONFIG_FILE_UPDATED: int = None
     EVENT_STAGE_CHANGE_SCENE_REQUEST: int = None
     EVENT_GAME_WIN: int = None
     EVENT_GAME_LOST: int = None
+    EVENT_LEVEL_1_COLLIDE_FLOOR: int = None
 
 
 # Executed when first imported

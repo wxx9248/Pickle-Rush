@@ -1,6 +1,6 @@
 import heapq
 import typing
-from typing import Tuple, Any
+from typing import Any
 
 
 class PriorityQueue:
