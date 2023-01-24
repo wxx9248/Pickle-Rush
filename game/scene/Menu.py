@@ -10,8 +10,6 @@ from core.object_model.Scene import Scene
 from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
-from game.scene.Level0 import Level0
-from game.scene.Level0Plus import Level0Plus
 from game.scene.Level1 import Level1
 from util import util
 

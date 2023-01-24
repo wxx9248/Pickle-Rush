@@ -17,7 +17,8 @@ class LayerManager:
             layer.update()
 
     def accept_event(self, event: pygame.event.Event):
-        if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+        if event.type == pygame.KEYDOWN \
+                or event.type == pygame.KEYUP:
             [layer.accept_event(event) for layer in self.__layer_dict.values()]
 
     def render(self, surface: pygame.surface.Surface):

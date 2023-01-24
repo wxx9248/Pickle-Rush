@@ -7,6 +7,7 @@ from core.object_model.Atlas import Atlas
 from core.state_machine.State import State
 from core.state_machine.StateMachine import StateMachine
 from core.state_machine.TransitionGroup import TransitionGroup
+from event.CustomEventTypes import CustomEventTypes
 from game.atlas.PickleAtlas import WalkState
 
 
@@ -65,6 +66,11 @@ class JumpUpState(State):
         self.volatile_store["accelerated"] = True
 
 
+class MidAirState(State):
+    def __init__(self, **kwargs):
+        super().__init__("mid-air", **kwargs)
+
+
 class PickleAtlasGravity(Atlas):
     # Gravitational acceleration
     G = 0.1
@@ -107,6 +113,7 @@ class PickleAtlasGravity(Atlas):
         self.__state_machine_vertical = StateMachine()
         self.__state_machine_vertical.add_state(IdleStateVertical(atlas=self))
         self.__state_machine_vertical.add_state(JumpUpState(atlas=self))
+        self.__state_machine_vertical.add_state(MidAirState(atlas=self))
         self.__state_machine_vertical.add_transition_group(
             "idle",
             TransitionGroup(
@@ -116,8 +123,13 @@ class PickleAtlasGravity(Atlas):
         self.__state_machine_vertical.add_transition_group(
             "jump-up",
             TransitionGroup(
+                (self.__state_machine_vertical["mid-air"], lambda _, e: True)
+            ))
+        self.__state_machine_vertical.add_transition_group(
+            "mid-air",
+            TransitionGroup(
                 (self.__state_machine_vertical["idle"],
-                 lambda _, e: e.type == pygame.KEYUP and e.key == pygame.K_UP)
+                 lambda _, e: e.type == CustomEventTypes.EVENT_LEVEL_1_COLLIDE_FLOOR)
             ))
         self.__state_machine_vertical.start_state = "idle"
         self.__state_machine_vertical.reset()
