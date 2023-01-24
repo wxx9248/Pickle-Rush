@@ -30,6 +30,7 @@ class AssetObjectFactory:
         "asset/texts/back-to-menu-text.json": {"key": "asset.text.back-to-menu"},
         "asset/maps/level-0.csv": {"key": "asset.map.level.0"},
         "asset/maps/level-1.csv": {"key": "asset.map.level.1"},
+        None: {"key": "asset.map.random"}
     }
 
     __asset_id_path_dict = {value["key"]: key for key, value in ASSET_PROPS.items()}

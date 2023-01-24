@@ -1,15 +1,23 @@
 import heapq
+import typing
+from typing import Tuple, Any
 
 
 class PriorityQueue:
     def __init__(self):
-        self.elements = []
+        self.__elements = []
+        self.__counter = 0
 
-    def empty(self):
-        return len(self.elements) == 0
+    def empty(self) -> bool:
+        return len(self.__elements) == 0
 
-    def put(self, item, priority):
-        heapq.heappush(self.elements, (priority, item))
+    def push(self, item: typing.Any, priority: int):
+        heapq.heappush(self.__elements, (priority, self.__counter, item))
+        self.__counter += 1
 
-    def get(self):
-        return heapq.heappop(self.elements)[1]
+    def pop_element(self):
+        return heapq.heappop(self.__elements)[2]
+
+    def pop(self) -> tuple[int, Any]:
+        (priority, _, element) = heapq.heappop(self.__elements)
+        return priority, element

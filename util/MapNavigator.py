@@ -63,19 +63,20 @@ class MapNavigator:
 
         def space_neighbor_filter(candidate) -> bool:
             try:
-                return self.__map_atlas.map_object.tile_types[candidate[0]][candidate[1]] == Map.TileType.SPACE
+                tile_type = self.__map_atlas.map_object.tile_types[candidate[0]][candidate[1]]
+                return tile_type == Map.TileType.SPACE or tile_type == Map.TileType.START
             except IndexError:
                 return False
 
         priority_queue = PriorityQueue()
 
-        priority_queue.put(self.__source_grid_index, 0)
+        priority_queue.push(self.__source_grid_index, 0)
         came_from: typing.Dict[typing.Tuple[int, int], typing.Optional[typing.Tuple[int, int]]] = {}
         cost_map: typing.Dict[typing.Tuple[int, int], float] = {self.__source_grid_index: 0}
         came_from[self.__source_grid_index] = None
 
         while not priority_queue.empty():
-            current_grid_index: typing.Tuple[int, int] = priority_queue.get()
+            current_grid_index: typing.Tuple[int, int] = priority_queue.pop_element()
 
             if current_grid_index == self.__target_grid_index:
                 break
@@ -98,7 +99,7 @@ class MapNavigator:
                 if space_neighbor not in cost_map or new_cost < cost_map[space_neighbor]:
                     cost_map[space_neighbor] = new_cost
                     priority = new_cost + cost(space_neighbor, self.__target_grid_index)
-                    priority_queue.put(space_neighbor, priority)
+                    priority_queue.push(space_neighbor, priority)
                     came_from[space_neighbor] = current_grid_index
 
         return came_from

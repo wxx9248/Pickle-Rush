@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import typing
 
-import pygame.surface
+import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Layer import Layer
@@ -18,7 +18,7 @@ from util import util
 from util.MapNavigator import MapNavigator
 
 
-class Level0(Scene):
+class Level0Plus(Scene):
     def __init__(self, size: typing.Tuple[int, int]):
         super().__init__(size)
 
@@ -26,7 +26,7 @@ class Level0(Scene):
         background_surface.fill(pygame.Color("white"))
         self.background["background"] = Sprite(background_surface)
 
-        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.0"))
+        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.random", tile_count=(17, 23)))
         self.__map_atlas.position = util.center(
             size,
             self.__map_atlas[self.__map_atlas.current_sprite_key].surface.get_size()
@@ -44,10 +44,10 @@ class Level0(Scene):
         self.__bacteria_atlas_position = (
             (BacteriaAtlas(), (1, 1)),
             (BacteriaAtlas(), (15, 1)),
-            (BacteriaAtlas(), (15, 19)),
-            (BacteriaAtlas(), (1, 21))
+            (BacteriaAtlas(), (1, 21)),
+            (BacteriaAtlas(), (15, 21)),
+            (BacteriaAtlas(), self.__map_atlas.map_object.exit_point)
         )
-
         for (bacteria_atlas, position) in self.__bacteria_atlas_position:
             bacteria_atlas.scale = (0.025, 0.025)
             bacteria_atlas.position = self.__map_atlas.grid_to_screen_position(

@@ -14,4 +14,6 @@ class TileSprite(Sprite):
             surface.fill(pygame.color.Color("red"))
         elif tile_type == Map.TileType.EXIT:
             surface.fill(pygame.color.Color("green"))
+        elif tile_type == Map.TileType.START:
+            surface.fill(pygame.color.Color("blue"))
         super().__init__(surface)
