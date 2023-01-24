@@ -5,8 +5,8 @@ import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Layer import Layer
+from core.object_model.Map import Map
 from core.object_model.Scene import Scene
-from core.object_model.Sprite import Sprite
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.BacteriaAtlas import BacteriaAtlas
 from game.atlas.MapAtlas import MapAtlas
@@ -22,11 +22,17 @@ class Level0Plus(Scene):
     def __init__(self, size: typing.Tuple[int, int]):
         super().__init__(size)
 
-        background_surface = pygame.Surface(self.size).convert_alpha()
-        background_surface.fill(pygame.Color("white"))
-        self.background["background"] = Sprite(background_surface)
+        self.background["background"] = AssetObjectFactory().new_asset_object("asset.sprite.level.0.plus.background")
 
-        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.random", tile_count=(17, 23)))
+        texture_dict = {
+            Map.TileType.SPACE: AssetObjectFactory().new_asset_object("asset.sprite.level.0.tile.soil"),
+            Map.TileType.WALL: AssetObjectFactory().new_asset_object("asset.sprite.level.0.tile.wall"),
+            Map.TileType.EXIT: AssetObjectFactory().new_asset_object("asset.sprite.level.0.tile.exit"),
+            Map.TileType.START: AssetObjectFactory().new_asset_object("asset.sprite.level.0.tile.spawn")
+        }
+
+        self.__map_atlas = \
+            MapAtlas(AssetObjectFactory().new_asset_object("asset.map.random", tile_count=(17, 23)), texture_dict)
         self.__map_atlas.position = util.center(
             size,
             self.__map_atlas[self.__map_atlas.current_sprite_key].surface.get_size()

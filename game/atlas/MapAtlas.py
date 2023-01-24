@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import typing
-from typing import Dict, Union
+from typing import Dict
 
 import pygame.surface
 
@@ -12,23 +12,18 @@ from util import util
 
 
 class MapAtlas(Atlas):
-    def __init__(self, map_object: Map, tile_size: int = 40,
-                 texture_setup: Union[Dict[int, Sprite], None] = None, **kwargs):
+    def __init__(self, map_object: Map, texture_dict: Dict[int, Sprite], tile_size: int = 40, **kwargs):
         self.__map_object = map_object
         self.__tile_sprite_dict: typing.Dict[Map.TileType, Sprite] = {}
 
         self.__tile_size = tile_size
 
-        if texture_setup:
-            for tile_type in Map.TileType:
-                if tile_type in texture_setup.keys():
-                    self.__tile_sprite_dict[tile_type] = \
-                        TileSprite(tile_type, self.__tile_size, texture_setup[tile_type])
-                else:
-                    self.__tile_sprite_dict[tile_type] = TileSprite(tile_type, self.__tile_size)
-        else:
-            for tile_type in Map.TileType:
-                self.__tile_sprite_dict[tile_type] = TileSprite(tile_type, self.__tile_size)
+        for tile_type in Map.TileType:
+            try:
+                texture = texture_dict[tile_type]
+            except KeyError:
+                texture = None
+            self.__tile_sprite_dict[tile_type] = TileSprite(tile_type, self.__tile_size, texture)
 
         surface = pygame.surface.Surface(
             (self.__tile_size * map_object.tile_count[1],
