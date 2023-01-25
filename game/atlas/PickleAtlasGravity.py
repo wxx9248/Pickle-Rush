@@ -3,12 +3,16 @@
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
+from config.ConfigManager import ConfigManager
 from core.object_model.Atlas import Atlas
 from core.state_machine.State import State
 from core.state_machine.StateMachine import StateMachine
 from core.state_machine.TransitionGroup import TransitionGroup
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.PickleAtlas import WalkState
+from game.atlas.BulletAtlas import BulletAtlas
+from core.object_model.TimedState import TimedState
+from typing import Dict, List
 
 
 class IdleStateHorizontal(State):
@@ -26,6 +30,7 @@ class WalkLeftState(WalkState):
     def before_entry(self):
         super().before_entry()
         self.persistent_store["atlas"].speed_x = -WalkState.WALK_SPEED
+        self.persistent_store["atlas"].direction = "left"
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -38,6 +43,7 @@ class WalkRightState(WalkState):
     def before_entry(self):
         super().before_entry()
         self.persistent_store["atlas"].speed_x = WalkState.WALK_SPEED
+        self.persistent_store["atlas"].direction = "right"
 
     def before_leave(self):
         self.persistent_store["atlas"].speed_x = 0
@@ -75,12 +81,24 @@ class PickleAtlasGravity(Atlas):
     # Gravitational acceleration
     G = 0.1
 
-    def __init__(self):
+    def __init__(self, bullet_list: List[BulletAtlas] = None):
         super().__init__()
         asset_object_factory = AssetObjectFactory()
         self["idle"] = asset_object_factory.new_asset_object("asset.sprite.pickle.0")
         self["walking-1"] = asset_object_factory.new_asset_object("asset.sprite.pickle.1")
         self["walking-2"] = asset_object_factory.new_asset_object("asset.sprite.pickle.2")
+
+        config_manager = ConfigManager()
+        self.__debug = config_manager.get("config.debug")
+
+        if bullet_list is None:
+            bullet_list = []
+        self.__bullet_list = bullet_list
+
+        # used for specifying firing direction for now
+        self.direction = "right"
+
+        self.__hp = 5
 
         self.__state_machine_horizontal = StateMachine()
         self.__state_machine_horizontal.add_state(IdleStateHorizontal(atlas=self))
@@ -135,12 +153,47 @@ class PickleAtlasGravity(Atlas):
         self.__state_machine_vertical.reset()
 
         self.acceleration_y = PickleAtlasGravity.G
+        self.__bullet_speed = 5
+
+        self.__invincible = TimedState(60 * 2)
+
+    def hit(self, damage):
+        if not self.__invincible.activate:
+            self.__hp -= damage
+            self.__invincible.start()
+
+    @property
+    def hp(self):
+        return self.__hp
+
+    @hp.setter
+    def hp(self, val):
+        self.__hp = val
+
+    def fire(self):
+        bullet = BulletAtlas()
+        fire_vec = (0, 0)
+        r_side_offset = pygame.Vector2(self.surface.get_size())
+        r_side_offset.y /= 2
+        l_side_offset = pygame.Vector2(-r_side_offset.x, r_side_offset.y)
+        if self.direction == "left":
+            fire_vec = pygame.Vector2(-1, 0) * self.__bullet_speed
+            bullet.position = tuple(pygame.Vector2(self.position) + l_side_offset)
+        elif self.direction == "right":
+            fire_vec = pygame.Vector2(1, 0) * self.__bullet_speed
+            bullet.position = tuple(pygame.Vector2(self.position) + r_side_offset)
+        bullet.speed = fire_vec
+        self.__bullet_list.append(bullet)
 
     def update(self):
         super().update()
         self.__state_machine_horizontal.update()
         self.__state_machine_vertical.update()
+        self.__invincible.update()
 
     def accept_event(self, event: pygame.event.Event):
         self.__state_machine_horizontal.next(event)
         self.__state_machine_vertical.next(event)
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
+            self.fire()

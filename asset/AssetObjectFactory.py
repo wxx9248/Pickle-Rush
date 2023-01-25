@@ -19,6 +19,7 @@ class AssetObjectFactory:
         "asset/images/pickle-2.png": {"key": "asset.sprite.pickle.2"},
         "asset/images/senior-pickle.png": {"key": "asset.sprite.senior-pickle"},
         "asset/images/bacteria.png": {"key": "asset.sprite.bacteria"},
+        "asset/images/heart.png": {"key": "asset.sprite.heart"},
         "asset/images/level-0/background.jpg": {"key": "asset.sprite.level.0.background"},
         "asset/images/level-0/tile/soil.png": {"key": "asset.sprite.level.0.tile.soil"},
         "asset/images/level-0/tile/wall.png": {"key": "asset.sprite.level.0.tile.wall"},
@@ -43,6 +44,7 @@ class AssetObjectFactory:
         "asset/texts/back-to-menu.png": {"key": "asset.sprite.back-to-menu"},
         "asset/maps/level-0.csv": {"key": "asset.map.level.0"},
         "asset/maps/level-1.csv": {"key": "asset.map.level.1"},
+        "asset/maps/level-2.csv": {"key": "asset.map.level.2"},
         None: {"key": "asset.map.random"}
     }
 
