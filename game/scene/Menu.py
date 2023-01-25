@@ -7,6 +7,7 @@ from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
 from core.object_model.Layer import Layer
 from core.object_model.Scene import Scene
+from core.object_model.Sprite import Sprite
 from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
@@ -20,27 +21,33 @@ class Menu(Scene):
 
         asset_object_factory = AssetObjectFactory()
 
+        self.background = Atlas(asset_object_factory.new_asset_object("asset.sprite.menu.background"))
+        self.background.scale_to(size)
+
         # Initialize sprites
-        logo_text_sprite: Text = asset_object_factory.new_asset_object("asset.text.menu.logo")
+        logo_text_sprite: Sprite = asset_object_factory.new_asset_object("asset.sprite.menu.logo")
         logo_atlas = Atlas(logo_text_sprite)
-        logo_atlas.position_x = util.center(self.size, logo_text_sprite.surface.get_size())[0]
-        logo_atlas.position_y = 150
+        logo_atlas.position_x = util.center(self.size, logo_text_sprite.surface.get_size())[0] - 20
+        logo_atlas.position_y = 100
 
-        start_text_sprite: Text = asset_object_factory.new_asset_object("asset.text.menu.start")
+        start_text_sprite: Sprite = asset_object_factory.new_asset_object("asset.sprite.menu.start")
         start_text_atlas = Atlas(start_text_sprite)
-        start_text_atlas.position_x = util.center(self.size, start_text_sprite.surface.get_size())[0]
-        start_text_atlas.position_y = 450
+        start_text_atlas.scale = (0.8, 0.8)
+        start_text_atlas.position_x = util.center(self.size, start_text_sprite.surface.get_size())[0] + 10
+        start_text_atlas.position_y = 425
 
-        exit_text_sprite: Text = asset_object_factory.new_asset_object("asset.text.menu.exit")
+        exit_text_sprite: Sprite = asset_object_factory.new_asset_object("asset.sprite.menu.exit")
         exit_text_atlas = Atlas(exit_text_sprite)
-        exit_text_atlas.position_x = util.center(self.size, exit_text_sprite.surface.get_size())[0]
-        exit_text_atlas.position_y = 550
+        exit_text_atlas.scale = (0.8, 0.8)
+        exit_text_atlas.position_x = util.center(self.size, exit_text_sprite.surface.get_size())[0] + 10
+        exit_text_atlas.position_y = 525
 
         cursor_sprite_atlas = MenuSelectorAtlas()
-        cursor_sprite_atlas.position_x = 500
+        cursor_sprite_atlas.scale = (0.04, 0.04)
+        cursor_sprite_atlas.position_x = 475
         cursor_sprite_atlas.add_anchor(
-            (start_text_atlas.position_y - 6, lambda: self.start_game()),
-            (exit_text_atlas.position_y - 6, lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
+            (start_text_atlas.position_y + 7, lambda: self.start_game()),
+            (exit_text_atlas.position_y + 7, lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
         )
 
         layer = Layer(logo_atlas, start_text_atlas, exit_text_atlas, cursor_sprite_atlas)

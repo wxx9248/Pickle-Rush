@@ -11,7 +11,7 @@ AnchorType: typing.TypeAlias = typing.Tuple[float, typing.Callable]
 
 class MenuSelectorAtlas(Atlas):
     def __init__(self):
-        super().__init__(AssetObjectFactory().new_asset_object("asset.text.menu.cursor"))
+        super().__init__(AssetObjectFactory().new_asset_object("asset.sprite.menu.cursor"))
         self.__anchors: typing.List[AnchorType] = []
         self.__current_anchor_index = -1
 
