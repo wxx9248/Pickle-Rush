@@ -27,15 +27,15 @@ class Level1(Scene):
         self.__is_show_collide_body = config_manager.get("config.debug")
 
         ao = AssetObjectFactory()
-        texture_setup = {
-            Map.TileType.WALL: ao.new_asset_object("asset.sprite.tile.grass"),
-            Map.TileType.DEAD: ao.new_asset_object("asset.sprite.tile.water")
+        texture_dict = {
+            Map.TileType.WALL: ao.new_asset_object("asset.sprite.level.1.tile.grass"),
+            Map.TileType.DEAD: ao.new_asset_object("asset.sprite.level.1.tile.water")
         }
 
         self.background = Atlas(ao.new_asset_object("asset.sprite.level.1.background"))
         self.background.scale_to(size)
 
-        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.1"), 60, texture_setup)
+        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.1"), texture_dict, 60)
         self.__map_atlas.position = (0, 0)
         self.__map_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
         map_layer = Layer(self.__map_atlas)
@@ -64,10 +64,10 @@ class Level1(Scene):
 
     def init_scenery_layer(self):
         ao = AssetObjectFactory()
-        tower_sp: Sprite = ao.new_asset_object("asset.sprite.tower")
+        tower_sp: Sprite = ao.new_asset_object("asset.sprite.level.1.tower")
         tower_sp.image = pygame.transform.scale(tower_sp.surface, (220, 220))
 
-        tree_sp: Sprite = ao.new_asset_object("asset.sprite.tree")
+        tree_sp: Sprite = ao.new_asset_object("asset.sprite.level.1.tree")
         tree_sp.image = pygame.transform.scale(tree_sp.surface, (60, 120))
 
         tower = Atlas(tower_sp)
