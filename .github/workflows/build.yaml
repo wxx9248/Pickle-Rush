@@ -1,0 +1,121 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build-windows-amd64:
+    runs-on: windows-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python and pip
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+      - name: Installing Python requirements
+        run: |
+          pip install -r requirements.txt
+      - name: Generating distributable
+        run: |
+          pyinstaller -F main.py
+          mv dist/main.exe main.exe
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush-windows-amd64'
+          path: |
+            asset/
+            main.exe
+            config.json
+  build-linux-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python and pip
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+      - name: Installing Python requirements
+        run: |
+          pip install -r requirements.txt
+      - name: Generating distributable
+        run: |
+          pyinstaller -F main.py
+          mv dist/main main
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush-linux-amd64'
+          path: |
+            asset/
+            main
+            config.json
+  build-macos-amd64:
+    runs-on: macos-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python and pip
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+      - name: Installing Python requirements
+        run: |
+          pip install -r requirements.txt
+      - name: Generating distributable
+        run: |
+          pyinstaller -F main.py
+          mv dist/main main
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush-macos-amd64'
+          path: |
+            asset/
+            main
+            config.json
+  release:
+    needs:
+      - build-windows-amd64
+      - build-windows-amd64
+      - build-macos-amd64
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts/
+      - name: Gathering artifacts
+        run: |
+          cd artifacts
+          for name in *
+          do
+              zip -r ../$name.zip $name
+          done
+          cd ..
+          rm -rf artifacts
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: false
+          prerelease: false
+          automatic_release_tag: latest
+          files: |
+            *
