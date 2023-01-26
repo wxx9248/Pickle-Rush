@@ -35,7 +35,10 @@ class MenuSelectorAtlas(Atlas):
         if self.__current_anchor_index < 0:
             return
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        if event.type != pygame.KEYDOWN:
+            return
+
+        if event.key == pygame.K_RETURN:
             self.__anchors[self.__current_anchor_index][1]()
 
         if event.key == pygame.K_UP and self.__current_anchor_index > 0:
