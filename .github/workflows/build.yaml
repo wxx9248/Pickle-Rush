@@ -20,40 +20,61 @@ jobs:
           cache: "pip"
       - name: Installing Python requirements
         run: |
-          cd CIS-Game-Project-2023W
           pip install -r requirements.txt
-          cd ..
       - name: Generating distributable
         run: |
-          cd CIS-Game-Project-2023W
-          python -m pyinstaller -F main.py
-          cd ..
+          pyinstaller -F main.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: 'pickle-rush.exe'
-          path: CIS-Game-Project-2023W/dist/main.exe
-#  build-linux:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checks-out repository
-#        uses: actions/checkout@v3
-#        with:
-#          submodules: recursive
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: 'pickle-rush'
-#          path: dist/main
-#  build-macos:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Checks-out repository
-#        uses: actions/checkout@v3
-#        with:
-#          submodules: recursive
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: 'pickle-rush.app.zip'
-#          path: dist/main.app.zip
+          path: dist/main.exe
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python and pip
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+      - name: Installing Python requirements
+        run: |
+          pip install -r requirements.txt
+      - name: Generating distributable
+        run: |
+          pyinstaller -F main.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush'
+          path: dist/main
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python and pip
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+      - name: Installing Python requirements
+        run: |
+          pip install -r requirements.txt
+      - name: Generating distributable
+        run: |
+          pyinstaller -F main.py
+      - name: Archiving artifact
+        run: |
+          zip -r dist/main.app.zip dist/main.app
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush.app.zip'
+          path: dist/main.app.zip
