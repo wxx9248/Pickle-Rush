@@ -1,9 +1,7 @@
 name: build
 on:
   push:
-    branches:
-      - master
-      - 3-create-github-action-scripts-for-automatic-release
+    branches: *
   workflow_dispatch: null
 
 jobs:
