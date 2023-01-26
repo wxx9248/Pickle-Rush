@@ -8,7 +8,6 @@ from core.object_model.Atlas import Atlas
 from core.object_model.Layer import Layer
 from core.object_model.Scene import Scene
 from core.object_model.Sprite import Sprite
-from core.object_model.Text import Text
 from event.CustomEventTypes import CustomEventTypes
 from game.atlas.MenuSelectorAtlas import MenuSelectorAtlas
 from game.scene import Menu

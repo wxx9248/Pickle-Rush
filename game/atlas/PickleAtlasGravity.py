@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
+from typing import List
+
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from config.ConfigManager import ConfigManager
 from core.object_model.Atlas import Atlas
+from core.object_model.TimedState import TimedState
 from core.state_machine.State import State
 from core.state_machine.StateMachine import StateMachine
 from core.state_machine.TransitionGroup import TransitionGroup
 from event.CustomEventTypes import CustomEventTypes
-from game.atlas.PickleAtlas import WalkState
 from game.atlas.BulletAtlas import BulletAtlas
-from core.object_model.TimedState import TimedState
-from typing import Dict, List
+from game.atlas.PickleAtlas import WalkState
 
 
 class IdleStateHorizontal(State):

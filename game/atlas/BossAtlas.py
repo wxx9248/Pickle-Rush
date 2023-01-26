@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-import typing
+
+from typing import List
 
 import pygame
 
 from asset.AssetObjectFactory import AssetObjectFactory
 from core.object_model.Atlas import Atlas
+from core.object_model.TimedState import TimedState
 from game.atlas.BacteriaAtlasGravity import BacteriaAtlasGravity
 from game.atlas.BulletAtlas import BulletAtlas
-from util.PatrolNavigator import PatrolNavigator
 from game.atlas.MapAtlas import MapAtlas
-from core.object_model.Sprite import Sprite
-from core.object_model.Layer import Layer
-from core.object_model.TimedState import TimedState
-from typing import List
+from util.PatrolNavigator import PatrolNavigator
 
 
 class BossAtlas(Atlas):

@@ -1,8 +1,5 @@
-import typing
-
 from core.object_model.Atlas import Atlas
 from core.object_model.Sprite import Sprite
-import pygame
 
 
 class BulletAtlas(Atlas):

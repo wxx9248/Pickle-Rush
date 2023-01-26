@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import typing
+from typing import List
 
 import pygame.sprite
 
 from core.object_model.Atlas import Atlas
-from typing import List
 
 
 class Layer:

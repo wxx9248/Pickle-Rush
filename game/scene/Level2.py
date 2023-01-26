@@ -13,14 +13,13 @@ from core.object_model.Map import Map
 from core.object_model.Scene import Scene
 from core.object_model.Sprite import Sprite
 from event.CustomEventTypes import CustomEventTypes
+from game.atlas.BacteriaAtlasGravity import BacteriaAtlasGravity
+from game.atlas.BossAtlas import BossAtlas
+from game.atlas.BulletAtlas import BulletAtlas
 from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlasGravity import PickleAtlasGravity
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
-from game.atlas.BacteriaAtlasGravity import BacteriaAtlasGravity
-from game.atlas.BossAtlas import BossAtlas
-from util.PatrolNavigator import PatrolNavigator
-from game.atlas.BulletAtlas import BulletAtlas
 
 
 class Level2(Scene):

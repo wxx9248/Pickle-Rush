@@ -1,12 +1,9 @@
-from core.object_model.Atlas import Atlas
-import typing
 from typing import Tuple
+
 import pygame
 
 from core.object_model.Atlas import Atlas
-from core.object_model.Map import Map
 from game.atlas.MapAtlas import MapAtlas
-from util.PriorityQueue import PriorityQueue
 
 
 class PatrolNavigator:
