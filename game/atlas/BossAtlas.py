@@ -18,7 +18,7 @@ from typing import List
 class BossAtlas(Atlas):
     def __init__(self, enemy_list: List, enemy_bullet_list: List, map_atlas: MapAtlas):
         asset_object_factory = AssetObjectFactory()
-        super().__init__(asset_object_factory.new_asset_object("asset.sprite.bacteria"))
+        super().__init__(asset_object_factory.new_asset_object("asset.sprite.boss"))
         self.scale_to((700, 700))
         self.__enemy_list = enemy_list
         self.__bullet_list = enemy_bullet_list
@@ -52,10 +52,9 @@ class BossAtlas(Atlas):
         self.__enemy_list.append(bc2)
 
     def fire(self):
-        img = pygame.Surface((10, 2))
-        img.fill(pygame.color.Color("blue"))
-        sp = Sprite(img)
-        bullet = BulletAtlas(sp)
+        sprite = AssetObjectFactory().new_asset_object("asset.sprite.boss-projectile")
+        bullet = BulletAtlas(sprite)
+        bullet.scale = (0.02, 0.02)
 
         fire_vec = pygame.Vector2(-1, 0) * self.__bullet_speed
         bullet.position = tuple(pygame.Vector2(self.position))

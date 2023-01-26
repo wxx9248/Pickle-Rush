@@ -25,19 +25,19 @@ class GameLost(Scene):
 
         game_lost_text_sprite: Sprite = AssetObjectFactory().new_asset_object("asset.sprite.game-lost")
         game_lost_text_atlas = Atlas(game_lost_text_sprite)
-        game_lost_text_atlas.position_x = util.center(self.size, game_lost_text_sprite.surface.get_size())[0]
+        game_lost_text_atlas.position_x = util.center(self.size, game_lost_text_atlas.surface.get_size())[0]
         game_lost_text_atlas.position_y = 100
 
         retry_text_sprite: Sprite = AssetObjectFactory().new_asset_object("asset.sprite.retry")
         retry_text_atlas = Atlas(retry_text_sprite)
         retry_text_atlas.scale = (0.6, 0.6)
-        retry_text_atlas.position_x = util.center(self.size, retry_text_sprite.surface.get_size())[0] + 40
+        retry_text_atlas.position_x = util.center(self.size, retry_text_atlas.surface.get_size())[0]
         retry_text_atlas.position_y = 450
 
         back_to_menu_text_sprite: Sprite = AssetObjectFactory().new_asset_object("asset.sprite.back-to-menu")
         back_to_menu_text_atlas = Atlas(back_to_menu_text_sprite)
         back_to_menu_text_atlas.scale = (0.6, 0.6)
-        back_to_menu_text_atlas.position_x = util.center(self.size, back_to_menu_text_sprite.surface.get_size())[0] + 115
+        back_to_menu_text_atlas.position_x = util.center(self.size, back_to_menu_text_atlas.surface.get_size())[0]
         back_to_menu_text_atlas.position_y = 550
 
         cursor_sprite_atlas = MenuSelectorAtlas()

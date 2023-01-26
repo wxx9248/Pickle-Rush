@@ -171,7 +171,8 @@ class PickleAtlasGravity(Atlas):
         self.__hp = val
 
     def fire(self):
-        bullet = BulletAtlas()
+        bullet = BulletAtlas(AssetObjectFactory().new_asset_object("asset.sprite.pickle-projectile"))
+        bullet.scale = (0.02, 0.02)
         fire_vec = (0, 0)
         r_side_offset = pygame.Vector2(self.surface.get_size())
         r_side_offset.y /= 2

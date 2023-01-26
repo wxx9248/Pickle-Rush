@@ -17,6 +17,7 @@ from game.atlas.MapAtlas import MapAtlas
 from game.atlas.PickleAtlasGravity import PickleAtlasGravity
 from game.scene.GameLost import GameLost
 from game.scene.GameWin import GameWin
+from game.scene.Level2 import Level2
 
 
 class Level1(Scene):
@@ -125,7 +126,7 @@ class Level1(Scene):
         )
         if collide_exit:
             event = pygame.event.Event(CustomEventTypes.EVENT_STAGE_CHANGE_SCENE_REQUEST)
-            event.scene = GameWin(self.size, None)
+            event.scene = GameWin(self.size, Level2)
             pygame.event.post(event)
 
         collide_dead = self.__pickle_atlas.collides_mask(

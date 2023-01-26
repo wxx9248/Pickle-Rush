@@ -59,8 +59,7 @@ class Level2(Scene):
         self.background = Atlas(ao.new_asset_object("asset.sprite.level.1.background"))
         self.background.scale_to(size)
 
-        self.__map_atlas = MapAtlas(AssetObjectFactory().new_asset_object("asset.map.level.2"),
-                                    texture_dict, 60)
+        self.__map_atlas = MapAtlas(ao.new_asset_object("asset.map.level.2"), texture_dict, 60)
         self.__map_atlas.position = (0, 0)
         self.__map_atlas.SHOW_COLLIDE_BODY = self.__is_show_collide_body
         map_layer = Layer(self.__map_atlas)
