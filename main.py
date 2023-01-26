@@ -30,6 +30,7 @@ def main():
 
     logger.debug("Initializing pygame")
     pygame.init()
+    pygame.display.set_caption("Pickle Rush")
 
     logger.debug("Initializing config manager")
     config_manager = ConfigManager()

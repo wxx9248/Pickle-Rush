@@ -1,0 +1,58 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: null
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python & pip & dependencies
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: "pip"
+        run: |
+          cd CIS-Game-Project-2023W
+          pip install -r requirements.txt
+          cd ..
+      - name: Generating distributable
+        run: |
+          cd CIS-Game-Project-2023W
+          python -m pyinstaller -F main.py
+          cd ..
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'pickle-rush.exe'
+          path: CIS-Game-Project-2023W/dist/main.exe
+#  build-linux:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checks-out repository
+#        uses: actions/checkout@v3
+#        with:
+#          submodules: recursive
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: 'pickle-rush'
+#          path: dist/main
+#  build-macos:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checks-out repository
+#        uses: actions/checkout@v3
+#        with:
+#          submodules: recursive
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: 'pickle-rush.app.zip'
+#          path: dist/main.app.zip
