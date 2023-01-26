@@ -28,7 +28,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: 'pickle-rush.exe'
+          name: 'pickle-rush-windows-amd64'
           path: dist/main.exe
   build-linux:
     runs-on: ubuntu-latest
@@ -51,8 +51,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: 'pickle-rush'
-          path: dist/main
+          name: 'pickle-rush-linux-amd64'
+          path: |
+            dist/main
+            config.json
   build-macos:
     runs-on: macos-latest
     steps:
@@ -71,11 +73,8 @@ jobs:
       - name: Generating distributable
         run: |
           pyinstaller -F main.py
-      - name: Archiving artifact
-        run: |
-          zip -r dist/main.app.zip dist/main.app
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: 'pickle-rush.app.zip'
-          path: dist/main.app.zip
+          name: 'pickle-rush-macos-amd64'
+          path: dist/main
