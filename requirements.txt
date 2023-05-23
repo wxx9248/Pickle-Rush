@@ -3,5 +3,5 @@ pygame==2.4.0
 pyinstaller==5.10.1
 pyinstaller-hooks-contrib==2023.3
 readerwriterlock==1.0.9
-typing_extensions==4.5.0
+typing_extensions==4.6.0
 watchdog==3.0.0
