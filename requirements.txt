@@ -1,5 +1,5 @@
 altgraph==0.17.3
-pygame==2.5.0
+pygame==2.5.1
 pyinstaller==5.13.0
 pyinstaller-hooks-contrib==2023.6
 readerwriterlock==1.0.9
