@@ -31,7 +31,7 @@ jobs:
           pyinstaller -F main.py
           mv dist/main.exe main.exe
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'pickle-rush-windows-amd64'
           path: |
@@ -58,7 +58,7 @@ jobs:
           pyinstaller -F main.py
           mv dist/main main
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'pickle-rush-linux-amd64'
           path: |
@@ -85,7 +85,7 @@ jobs:
           pyinstaller -F main.py
           mv dist/main main
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'pickle-rush-macos-amd64'
           path: |
