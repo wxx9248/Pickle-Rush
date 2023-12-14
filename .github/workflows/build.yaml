@@ -101,7 +101,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts/
       - name: Gathering artifacts
