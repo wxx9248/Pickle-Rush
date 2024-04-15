@@ -1,6 +1,6 @@
 altgraph==0.17.4
 pygame==2.5.2
-pyinstaller==6.5.0
+pyinstaller==6.6.0
 pyinstaller-hooks-contrib==2024.4
 readerwriterlock==1.0.9
 typing_extensions==4.11.0
