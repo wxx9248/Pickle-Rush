@@ -4,4 +4,4 @@ pyinstaller==6.10.0
 pyinstaller-hooks-contrib==2024.8
 readerwriterlock==1.0.9
 typing_extensions==4.12.2
-watchdog==5.0.2
+watchdog==5.0.3
