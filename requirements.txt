@@ -1,7 +1,7 @@
 altgraph==0.17.4
 pygame==2.6.1
 pyinstaller==6.16.0
-pyinstaller-hooks-contrib==2025.9
+pyinstaller-hooks-contrib==2025.10
 readerwriterlock==1.0.9
 typing_extensions==4.15.0
 watchdog==6.0.0
